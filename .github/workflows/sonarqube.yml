@@ -25,5 +25,5 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         with:
           args:
-            -sonar.projectKey="syp123"
+            -Dsonar.projectKey="syp123"
             
