@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authorization.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using Tischreservierung.Models.Person;
 
 namespace Tischreservierung.Data.Person
@@ -32,9 +33,15 @@ namespace Tischreservierung.Data.Person
             await _context.SaveChangesAsync();
         }
 
-        public void SetCustomer(Customer customer)
+        public bool SetCustomer(Customer customer)
         {
+            int count = _context.Customers.Where(c => c.EMail.ToLower() == customer.EMail.ToLower()).Count();
+            if (_context.Customers.Any(c => c.EMail.ToLower() == customer.EMail.ToLower()))
+                return false;
+
             _context.Customers.Add(customer);
+
+            return true;
         }
     }
 }

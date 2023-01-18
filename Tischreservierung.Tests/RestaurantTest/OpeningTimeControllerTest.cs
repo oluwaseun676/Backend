@@ -107,14 +107,31 @@ namespace Tischreservierung.Tests.RestaurantTest
             openingTimeRepository.VerifyNoOtherCalls();
         }
 
+        
+        /*
         [Fact]
         public async Task UpdateOpeningTime()
         {
-        }
+
+        }*/
 
         [Fact]
         public async Task DeleteOpeningTime()
         {
+            var openingTimeRepository = new Mock<IOpeningTimeRepository>();
+
+            openingTimeRepository.Setup(r => r.GetOpeningTime(10)).ReturnsAsync(new RestaurantOpeningTime());
+            openingTimeRepository.Setup(r => r.DeleteOpeningTime(It.IsAny<RestaurantOpeningTime>()));
+            var openingTimeController = new RestaurantOpeningTimesController(openingTimeRepository.Object);
+
+            var actionResult = await openingTimeController.DeleteRestaurantOpeningTime(10);
+
+            Assert.IsType<NoContentResult>(actionResult);
+
+            openingTimeRepository.Verify(r => r.GetOpeningTime(10));
+            openingTimeRepository.Verify(r => r.DeleteOpeningTime(It.IsAny<RestaurantOpeningTime>()));
+            openingTimeRepository.Verify(r => r.Save());
+            openingTimeRepository.VerifyNoOtherCalls();
         }
 
 

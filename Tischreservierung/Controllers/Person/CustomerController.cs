@@ -46,7 +46,11 @@ namespace Tischreservierung.Controllers.Person
         [HttpPost("{data}")]
         public async Task<ActionResult> PostCustomer(Customer data)
         {
-            _customerRepository.SetCustomer(data);
+            bool check = _customerRepository.SetCustomer(data);
+
+            if (!check)
+                return UnprocessableEntity("GetCustomerByMail");
+
             await _customerRepository.Save();
 
             return CreatedAtAction("GetCustomerByMail", new { mail = data.EMail }, data); ;

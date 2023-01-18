@@ -64,7 +64,7 @@ namespace Tischreservierung.Tests.Person
                 EMail = "birnenseppl@gmail.com", Password = "testF", CustomerNumber = "testDataF" };
 
             var customerRepo = new Mock<ICustomerRepository>();
-            customerRepo.Setup(d => d.SetCustomer(customer));
+            customerRepo.Setup(d => d.SetCustomer(customer)).Returns(true);
             var customerCont = new CustomerController(customerRepo.Object);
 
             var actionResult = customerCont.PostCustomer(customer);
@@ -82,7 +82,7 @@ namespace Tischreservierung.Tests.Person
         }
 
         //Problem with unique Anotation for EMail
-        /*
+        
         [Fact]
         public async Task CreateCustomerWithAlreadyExistingMail()
         {
@@ -92,23 +92,23 @@ namespace Tischreservierung.Tests.Person
             var customerRepo = new Mock<ICustomerRepository>();
             var customerCont = new CustomerController(customerRepo.Object);
 
-            customerRepo.Setup(d => d.SetCustomer(customer));
+            customerRepo.Setup(d => d.SetCustomer(customer)).Returns(true);
             var actionResult1 = customerCont.PostCustomer(customer);
 
-            customerRepo.Setup(d => d.SetCustomer(customer));
+            customerRepo.Setup(d => d.SetCustomer(customer)).Returns(false);
             var actionResult2 = customerCont.PostCustomer(customer);
 
-            Assert.IsType<CreatedAtActionResult>(actionResult2.Result);
-            var result = actionResult2.Result as CreatedAtActionResult;
+            Assert.IsType<UnprocessableEntityObjectResult>(actionResult2.Result);
+            var result = actionResult2.Result as UnprocessableEntityObjectResult;
 
             Assert.NotNull(result);
             Assert.Equal(422, result!.StatusCode);
-            Assert.Equal(customer, result.Value as Customer);
+            //Assert.Equal(customer, result.Value as Customer);
 
             customerRepo.Verify(c => c.SetCustomer(customer));
             customerRepo.Verify(c => c.Save());
             customerRepo.VerifyNoOtherCalls();
-        }*/
+        }
 
         [Fact]
         public async Task DeleteCustomer()
