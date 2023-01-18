@@ -5,7 +5,7 @@ namespace Tischreservierung.Data.RestaurantRepo
 {
     public class OpeningTimeRepository : IOpeningTimeRepository
     {
-        private OnlineReservationContext _context;
+        private  readonly OnlineReservationContext _context;
 
         public OpeningTimeRepository(OnlineReservationContext context)
         {

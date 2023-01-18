@@ -118,7 +118,7 @@ namespace Tischreservierung.Controllers
 
         private bool RestaurantOpeningTimeExists(int id)
         {
-            return _repository.GetOpeningTime(id) == null ? false : true;
+            return _repository.GetOpeningTime(id) != null;
         }
     }
 }

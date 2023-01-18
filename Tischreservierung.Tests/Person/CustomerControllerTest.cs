@@ -58,7 +58,7 @@ namespace Tischreservierung.Tests.Person
         }
 
         [Fact]
-        public async Task CreateNewCustomer()
+        public void CreateNewCustomer()
         {
             Customer customer = new Customer() { Id = 10, Name = "Sepp", FamilyName = "Apfel", 
                 EMail = "birnenseppl@gmail.com", Password = "testF", CustomerNumber = "testDataF" };
@@ -84,7 +84,7 @@ namespace Tischreservierung.Tests.Person
         //Problem with unique Anotation for EMail
         
         [Fact]
-        public async Task CreateCustomerWithAlreadyExistingMail()
+        public void CreateCustomerWithAlreadyExistingMail()
         {
             Customer customer = new Customer() { Id = 10, Name = "Sepp", FamilyName = "Apfel",
                 EMail = "markus@gmail.com", Password = "testF", CustomerNumber = "testDataF" };
@@ -131,7 +131,7 @@ namespace Tischreservierung.Tests.Person
             customerRepo.VerifyNoOtherCalls();
         }
 
-        private List<Customer> TestData()
+        private static List<Customer> TestData()
         {
             List<Customer> data = new List<Customer>();
 

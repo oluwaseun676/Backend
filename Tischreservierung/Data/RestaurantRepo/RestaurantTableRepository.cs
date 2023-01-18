@@ -5,7 +5,7 @@ namespace Tischreservierung.Data.RestaurantRepo
 {
     public class RestaurantTableRepository : IRestaurantTableRepository
     {
-        private OnlineReservationContext _context;
+        private readonly OnlineReservationContext _context;
 
         public RestaurantTableRepository(OnlineReservationContext context)
         {

@@ -5,7 +5,7 @@ namespace Tischreservierung.Data.Person
 {
     public class EmployeeRepository : IEmployeeRepository
     {
-        private OnlineReservationContext _context;
+        private readonly OnlineReservationContext _context;
 
         public EmployeeRepository(OnlineReservationContext context)
         {
