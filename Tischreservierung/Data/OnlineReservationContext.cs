@@ -1,11 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Security.Policy;
 using Tischreservierung.Models.Person;
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Tischreservierung.Models;
 
 namespace Tischreservierung.Data

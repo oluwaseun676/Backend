@@ -7,7 +7,7 @@ namespace Tischreservierung.Data.Person
         Task<IEnumerable<Customer>> GetCustomers();
         Task<Customer?> GetCustomerByEMail(string mail);
 
-        void SetCustomer(Customer customer);
+        bool SetCustomer(Customer customer);
         void DeleteCustomer(Customer customer);
 
         Task Save();

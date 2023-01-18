@@ -10,6 +10,23 @@ namespace Tischreservierung.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Customers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CustomerNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FamilyName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EMail = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Customers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RestaurantCategory",
                 columns: table => new
                 {
@@ -54,6 +71,30 @@ namespace Tischreservierung.Migrations
                         column: x => x.ZipCodeId,
                         principalTable: "Zipcodes",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Employees",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IsAdmin = table.Column<bool>(type: "bit", nullable: false),
+                    RestaurantId = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FamilyName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EMail = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Employees", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Employees_Restaurants_RestaurantId",
+                        column: x => x.RestaurantId,
+                        principalTable: "Restaurants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -123,6 +164,29 @@ namespace Tischreservierung.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Customers_CustomerNumber",
+                table: "Customers",
+                column: "CustomerNumber",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Customers_EMail",
+                table: "Customers",
+                column: "EMail",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Employees_EMail",
+                table: "Employees",
+                column: "EMail",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Employees_RestaurantId",
+                table: "Employees",
+                column: "RestaurantId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_RestaurantOpeningTimes_RestaurantId",
                 table: "RestaurantOpeningTimes",
                 column: "RestaurantId");
@@ -145,6 +209,12 @@ namespace Tischreservierung.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Customers");
+
+            migrationBuilder.DropTable(
+                name: "Employees");
+
             migrationBuilder.DropTable(
                 name: "RestaurantOpeningTimes");
 
