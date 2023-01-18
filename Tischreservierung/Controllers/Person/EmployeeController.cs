@@ -34,7 +34,7 @@ namespace Tischreservierung.Controllers.Person
             _employeeRepository.SetEmployee(data);
             await _employeeRepository.Save();
 
-            return CreatedAtAction("GetCustomerById", new { id = data.Id }, data); ;
+            return CreatedAtAction("GetCustomerById", new { id = data.Id }, data);
         }
 
         [HttpDelete("{id}")]

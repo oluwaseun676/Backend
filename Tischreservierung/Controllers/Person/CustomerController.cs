@@ -53,7 +53,7 @@ namespace Tischreservierung.Controllers.Person
 
             await _customerRepository.Save();
 
-            return CreatedAtAction("GetCustomerByMail", new { mail = data.EMail }, data); ;
+            return CreatedAtAction("GetCustomerByMail", new { mail = data.EMail }, data);
         }
     }
 }

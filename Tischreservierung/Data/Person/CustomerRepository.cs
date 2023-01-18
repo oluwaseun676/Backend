@@ -6,7 +6,7 @@ namespace Tischreservierung.Data.Person
 {
     public class CustomerRepository : ICustomerRepository
     {
-        private OnlineReservationContext _context;
+        private readonly OnlineReservationContext _context;
 
         public CustomerRepository(OnlineReservationContext context)
         {
@@ -35,7 +35,6 @@ namespace Tischreservierung.Data.Person
 
         public bool SetCustomer(Customer customer)
         {
-            int count = _context.Customers.Where(c => c.EMail.ToLower() == customer.EMail.ToLower()).Count();
             if (_context.Customers.Any(c => c.EMail.ToLower() == customer.EMail.ToLower()))
                 return false;
 
