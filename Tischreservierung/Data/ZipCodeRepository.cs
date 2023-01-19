@@ -8,7 +8,7 @@ namespace Tischreservierung.Data
     public class ZipCodeRepository : IZipCodeRepository
     {
 
-        private OnlineReservationContext _context;
+        private readonly OnlineReservationContext _context;
 
         public ZipCodeRepository(OnlineReservationContext context)
         {
