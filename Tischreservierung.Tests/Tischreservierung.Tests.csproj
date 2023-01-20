@@ -30,4 +30,9 @@
     <ProjectReference Include="..\Tischreservierung\Tischreservierung.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="PersonTest\Repository\" />
+    <Folder Include="RestaurantTest\Repository\" />
+  </ItemGroup>
+
 </Project>

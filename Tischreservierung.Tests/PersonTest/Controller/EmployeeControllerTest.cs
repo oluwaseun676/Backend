@@ -10,7 +10,7 @@ using Tischreservierung.Data.Person;
 using Tischreservierung.Models;
 using Tischreservierung.Models.Person;
 
-namespace Tischreservierung.Tests.Person
+namespace Tischreservierung.Tests.Person.Controller
 {
     public class EmployeeControllerTest
     {
@@ -46,7 +46,7 @@ namespace Tischreservierung.Tests.Person
 
             var employeeRepo = new Mock<IEmployeeRepository>();
             employeeRepo.Setup(d => d.GetEmployeeById(id)).ReturnsAsync(TestData()[1]);
-            var employeeCont= new EmployeeController(employeeRepo.Object);
+            var employeeCont = new EmployeeController(employeeRepo.Object);
 
             var actionResult = await employeeCont.GetEmployeeById(id);
 
@@ -83,9 +83,16 @@ namespace Tischreservierung.Tests.Person
         [Fact]
         public void PostEmployee()
         {
-            Employee emp = new Employee() { Id = 10, Name = "Sepp", FamilyName = "Apfel", 
-                EMail = "birnenseppl@gmail.com", Password = "testF", IsAdmin = true, 
-                Restaurant = TestData()[3].Restaurant };
+            Employee emp = new Employee()
+            {
+                Id = 10,
+                Name = "Sepp",
+                FamilyName = "Apfel",
+                EMail = "birnenseppl@gmail.com",
+                Password = "testF",
+                IsAdmin = true,
+                Restaurant = TestData()[3].Restaurant
+            };
 
             var employeeRepo = new Mock<IEmployeeRepository>();
             employeeRepo.Setup(d => d.SetEmployee(emp));
@@ -107,18 +114,50 @@ namespace Tischreservierung.Tests.Person
 
         private static List<Employee> TestData()
         {
-            Restaurant restaurant = new Restaurant() { Id = 1, Name = "Test Restaurant"};
+            Restaurant restaurant = new Restaurant() { Id = 1, Name = "Test Restaurant" };
             Restaurant restaurant2 = new Restaurant() { Id = 2, Name = "Test Bar" };
             List<Employee> data = new List<Employee>();
 
-            data.Add(new Employee() { Id = 1, Name = "Elias",FamilyName = "Bauer",
-                EMail = "belias@gmail.com", Password = "testG", IsAdmin = true, Restaurant = restaurant });
-            data.Add(new Employee() { Id = 2, Name = "Felix", FamilyName = "Stein",
-                EMail = "Steini@gmail.com", Password = "testH", IsAdmin = false, Restaurant = restaurant });
-            data.Add(new Employee() { Id = 3, Name = "Sarah", FamilyName = "Müller",
-                EMail = "Sarah-Müller@gmail.com", Password = "testI", IsAdmin = false, Restaurant = restaurant });
-            data.Add(new Employee() { Id = 4, Name = "Lena", FamilyName = "Baumann",
-                EMail = "l.bau-testBar@gmail.com", Password = "testJ", IsAdmin = false, Restaurant = restaurant2 });
+            data.Add(new Employee()
+            {
+                Id = 1,
+                Name = "Elias",
+                FamilyName = "Bauer",
+                EMail = "belias@gmail.com",
+                Password = "testG",
+                IsAdmin = true,
+                Restaurant = restaurant
+            });
+            data.Add(new Employee()
+            {
+                Id = 2,
+                Name = "Felix",
+                FamilyName = "Stein",
+                EMail = "Steini@gmail.com",
+                Password = "testH",
+                IsAdmin = false,
+                Restaurant = restaurant
+            });
+            data.Add(new Employee()
+            {
+                Id = 3,
+                Name = "Sarah",
+                FamilyName = "Müller",
+                EMail = "Sarah-Müller@gmail.com",
+                Password = "testI",
+                IsAdmin = false,
+                Restaurant = restaurant
+            });
+            data.Add(new Employee()
+            {
+                Id = 4,
+                Name = "Lena",
+                FamilyName = "Baumann",
+                EMail = "l.bau-testBar@gmail.com",
+                Password = "testJ",
+                IsAdmin = false,
+                Restaurant = restaurant2
+            });
 
             return data;
         }

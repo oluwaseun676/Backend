@@ -9,7 +9,7 @@ using Tischreservierung.Controllers;
 using Tischreservierung.Data;
 using Tischreservierung.Models;
 
-namespace Tischreservierung.Tests
+namespace Tischreservierung.Tests.RestaurantTest.Controller
 {
     public class ZipCodeControllerTest
     {
@@ -50,7 +50,7 @@ namespace Tischreservierung.Tests
 
             Assert.NotNull(result);
             Assert.Equal(200, result!.StatusCode);
-            Assert.Single(((List<ZipCode>)result.Value!));
+            Assert.Single((List<ZipCode>)result.Value!);
 
             zipCodeRepository.Verify(r => r.GetByZipCode(It.IsAny<string>()));
             zipCodeRepository.VerifyNoOtherCalls();

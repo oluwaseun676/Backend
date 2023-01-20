@@ -10,7 +10,7 @@ using Tischreservierung.Data;
 using Tischreservierung.Data.RestaurantRepo;
 using Tischreservierung.Models;
 
-namespace Tischreservierung.Tests.RestaurantTest
+namespace Tischreservierung.Tests.RestaurantTest.Controller
 {
     public class OpeningTimeControllerTest
     {
@@ -66,10 +66,10 @@ namespace Tischreservierung.Tests.RestaurantTest
             List<RestaurantOpeningTime> times = OpeningTimeTestData();
 
             var openingTimeRepository = new Mock<IOpeningTimeRepository>();
-            openingTimeRepository.Setup(r => r.GetOpeningTimesByDayAndRestaurant(1,4)).ReturnsAsync(new List<RestaurantOpeningTime>() { times[4], times[5] });
+            openingTimeRepository.Setup(r => r.GetOpeningTimesByDayAndRestaurant(1, 4)).ReturnsAsync(new List<RestaurantOpeningTime>() { times[4], times[5] });
             var openingTimeController = new RestaurantOpeningTimesController(openingTimeRepository.Object);
 
-            var actionResult = await openingTimeController.GetRestaurantOpeningTimeForRestaurantAndDay(1,4);
+            var actionResult = await openingTimeController.GetRestaurantOpeningTimeForRestaurantAndDay(1, 4);
 
             Assert.IsType<OkObjectResult>(actionResult.Result);
             var result = actionResult.Result as OkObjectResult;
@@ -86,8 +86,13 @@ namespace Tischreservierung.Tests.RestaurantTest
         [Fact]
         public async Task PostOpeningTime()
         {
-            RestaurantOpeningTime openingTime = new RestaurantOpeningTime() { Day = 1, 
-                ClosingTime = new DateTime(1900, 1, 1, 18, 0, 0), OpeningTime = new DateTime(1900, 1, 1, 10, 0, 0), RestaurantId = 1 };
+            RestaurantOpeningTime openingTime = new RestaurantOpeningTime()
+            {
+                Day = 1,
+                ClosingTime = new DateTime(1900, 1, 1, 18, 0, 0),
+                OpeningTime = new DateTime(1900, 1, 1, 10, 0, 0),
+                RestaurantId = 1
+            };
 
             var openingTimeRepository = new Mock<IOpeningTimeRepository>();
             openingTimeRepository.Setup(oT => oT.InsertRestaurantOpeningTime(openingTime));
@@ -107,7 +112,7 @@ namespace Tischreservierung.Tests.RestaurantTest
             openingTimeRepository.VerifyNoOtherCalls();
         }
 
-        
+
         /*
         [Fact]
         public async Task UpdateOpeningTime()
@@ -144,7 +149,7 @@ namespace Tischreservierung.Tests.RestaurantTest
             openingTimes.Add(new RestaurantOpeningTime() { Day = 3, ClosingTime = new DateTime(1900, 1, 1, 18, 0, 0), OpeningTime = new DateTime(1900, 1, 1, 10, 0, 0), RestaurantId = 2 });
             openingTimes.Add(new RestaurantOpeningTime() { Day = 4, ClosingTime = new DateTime(1900, 1, 1, 12, 0, 0), OpeningTime = new DateTime(1900, 1, 1, 10, 0, 0), RestaurantId = 1 });
             openingTimes.Add(new RestaurantOpeningTime() { Day = 4, ClosingTime = new DateTime(1900, 1, 1, 18, 0, 0), OpeningTime = new DateTime(1900, 1, 1, 14, 0, 0), RestaurantId = 1 });
-            
+
             return openingTimes;
         }
     }

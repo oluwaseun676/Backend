@@ -9,7 +9,7 @@ using Tischreservierung.Controllers;
 using Tischreservierung.Data.RestaurantRepo;
 using Tischreservierung.Models;
 
-namespace Tischreservierung.Tests.RestaurantTest
+namespace Tischreservierung.Tests.RestaurantTest.Controller
 {
     public class RestaurantCategoryControllerTest
     {
