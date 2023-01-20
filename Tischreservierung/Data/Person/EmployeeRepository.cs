@@ -17,7 +17,7 @@ namespace Tischreservierung.Data.Person
             _context.Employees.Remove(employee);
         }
 
-        public async Task<List<Employee?>> GetByRestaurantId(int restaurantId)
+        public async Task<List<Employee>> GetByRestaurantId(int restaurantId)
         {
             return await _context.Employees.Where(x => x.RestaurantId == restaurantId).ToListAsync();
         }
