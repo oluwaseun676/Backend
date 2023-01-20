@@ -13,7 +13,7 @@ using Tischreservierung.Models;
 using Tischreservierung.Models.Person;
 using Xunit.Sdk;
 
-namespace Tischreservierung.Tests.Person
+namespace Tischreservierung.Tests.Person.Controller
 {
     public class CustomerControllerTest
     {
@@ -60,8 +60,15 @@ namespace Tischreservierung.Tests.Person
         [Fact]
         public void CreateNewCustomer()
         {
-            Customer customer = new Customer() { Id = 10, Name = "Sepp", FamilyName = "Apfel", 
-                EMail = "birnenseppl@gmail.com", Password = "testF", CustomerNumber = "testDataF" };
+            Customer customer = new Customer()
+            {
+                Id = 10,
+                Name = "Sepp",
+                FamilyName = "Apfel",
+                EMail = "birnenseppl@gmail.com",
+                Password = "testF",
+                CustomerNumber = "testDataF"
+            };
 
             var customerRepo = new Mock<ICustomerRepository>();
             customerRepo.Setup(d => d.SetCustomer(customer)).Returns(true);
@@ -80,12 +87,19 @@ namespace Tischreservierung.Tests.Person
             customerRepo.Verify(c => c.Save());
             customerRepo.VerifyNoOtherCalls();
         }
-        
+
         [Fact]
         public void CreateCustomerWithAlreadyExistingMail()
         {
-            Customer customer = new Customer() { Id = 10, Name = "Sepp", FamilyName = "Apfel",
-                EMail = "markus@gmail.com", Password = "testF", CustomerNumber = "testDataF" };
+            Customer customer = new Customer()
+            {
+                Id = 10,
+                Name = "Sepp",
+                FamilyName = "Apfel",
+                EMail = "markus@gmail.com",
+                Password = "testF",
+                CustomerNumber = "testDataF"
+            };
 
             var customerRepo = new Mock<ICustomerRepository>();
             var customerCont = new CustomerController(customerRepo.Object);
@@ -132,14 +146,42 @@ namespace Tischreservierung.Tests.Person
         {
             List<Customer> data = new List<Customer>();
 
-            data.Add(new Customer() { Id = 1, Name = "Markus", FamilyName = "Witz", 
-                EMail = "markus@gmail.com", Password = "testA", CustomerNumber = "testDataA" });
-            data.Add(new Customer() { Id = 2, Name = "Hermann", FamilyName = "Bauer", 
-                EMail = "h.bauer@gmail.com", Password = "testB", CustomerNumber = "testDataB" });
-            data.Add(new Customer() { Id = 3, Name = "Sebastian", FamilyName = "Witzeneder",
-                EMail = "funnymail@gmx.at", Password = "testC", CustomerNumber = "testDataC" });
-            data.Add(new Customer() { Id = 4, Name = "Hermann", FamilyName = "Witz", 
-                EMail = "witz@gmail.com", Password = "testD", CustomerNumber = "testDataD" });
+            data.Add(new Customer()
+            {
+                Id = 1,
+                Name = "Markus",
+                FamilyName = "Witz",
+                EMail = "markus@gmail.com",
+                Password = "testA",
+                CustomerNumber = "testDataA"
+            });
+            data.Add(new Customer()
+            {
+                Id = 2,
+                Name = "Hermann",
+                FamilyName = "Bauer",
+                EMail = "h.bauer@gmail.com",
+                Password = "testB",
+                CustomerNumber = "testDataB"
+            });
+            data.Add(new Customer()
+            {
+                Id = 3,
+                Name = "Sebastian",
+                FamilyName = "Witzeneder",
+                EMail = "funnymail@gmx.at",
+                Password = "testC",
+                CustomerNumber = "testDataC"
+            });
+            data.Add(new Customer()
+            {
+                Id = 4,
+                Name = "Hermann",
+                FamilyName = "Witz",
+                EMail = "witz@gmail.com",
+                Password = "testD",
+                CustomerNumber = "testDataD"
+            });
 
             return data;
         }
