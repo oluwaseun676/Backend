@@ -80,8 +80,6 @@ namespace Tischreservierung.Tests.Person
             customerRepo.Verify(c => c.Save());
             customerRepo.VerifyNoOtherCalls();
         }
-
-        //Problem with unique Anotation for EMail
         
         [Fact]
         public void CreateCustomerWithAlreadyExistingMail()
@@ -103,7 +101,6 @@ namespace Tischreservierung.Tests.Person
 
             Assert.NotNull(result);
             Assert.Equal(422, result!.StatusCode);
-            //Assert.Equal(customer, result.Value as Customer);
 
             customerRepo.Verify(c => c.SetCustomer(customer));
             customerRepo.Verify(c => c.Save());

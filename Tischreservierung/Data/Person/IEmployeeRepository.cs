@@ -8,7 +8,7 @@ namespace Tischreservierung.Data.Person
         void DeleteEmployee(Employee employee);
 
         Task<Employee?> GetEmployeeById(int personId);
-        Task<IEnumerable<Employee?>> GetByRestaurantId(int restaurantId);
+        Task<List<Employee>> GetByRestaurantId(int restaurantId);
 
         Task Save();
     }
