@@ -128,11 +128,11 @@ namespace Tischreservierung.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Place")
+                    b.Property<string>("Address")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Street")
+                    b.Property<string>("StreetNr")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

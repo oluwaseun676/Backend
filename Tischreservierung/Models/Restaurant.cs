@@ -10,8 +10,8 @@ namespace Tischreservierung.Models
         [Required]
         public string Name { get; set; } = string.Empty;
         public ZipCode? ZipCode { get; set; }
-        public string Place { get; set; } = string.Empty;
-        public string Street { get; set; } = string.Empty;
+        public string Address { get; set; } = string.Empty;
+        public string StreetNr { get; set; } = string.Empty;
 
         public List<RestaurantCategory>? RestaurantTypes { get; set; }
         public List<RestaurantTable>? Tables { get; set; }
