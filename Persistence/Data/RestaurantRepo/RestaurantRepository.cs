@@ -24,12 +24,11 @@ namespace Persistence.Data.RestaurantRepo
         }
         public bool InsertRestaurant(Restaurant restaurant)
         {
-            if (_context.Zipcodes.Contains(restaurant.ZipCode))
+            if (!_context.Zipcodes.Contains(restaurant.ZipCode))
             {
                 _context.Restaurants.Add(restaurant);
                 return true;
             }
-
             return false;
         }
 

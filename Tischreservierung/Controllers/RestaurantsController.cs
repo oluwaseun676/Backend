@@ -18,11 +18,10 @@ namespace Tischreservierung.Controllers
         private readonly IRestaurantRepository _repository;
 
 
-        private readonly ILogger<RestaurantsController> _logger;
-        public RestaurantsController(IRestaurantRepository repository, ILogger<RestaurantsController> logger)
+        //private readonly ILogger<RestaurantsController> _logger;
+        public RestaurantsController(IRestaurantRepository repository)
         {
             _repository = repository;
-            _logger = logger;
         }
 
         [HttpGet]
@@ -49,7 +48,7 @@ namespace Tischreservierung.Controllers
         [HttpPost]
         public async Task<ActionResult<Restaurant>> PostRestaurant(Restaurant restaurant)
         {
-            _logger.LogInformation(restaurant.Name);
+            //_logger.LogInformation(restaurant.Name);
             bool inserted = _repository.InsertRestaurant(restaurant);
             if (inserted)
             {

@@ -6,8 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Tischreservierung.Controllers;
-using Tischreservierung.Data.RestaurantRepo;
-using Tischreservierung.Models;
+using Persistence.Data.RestaurantRepo;
+using Core.Models;
+using Core.Contracts;
 
 namespace Tischreservierung.Tests.RestaurantTest.Controller
 {

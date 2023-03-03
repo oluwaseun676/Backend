@@ -7,10 +7,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Tischreservierung.Controllers;
 using Tischreservierung.Controllers.Person;
-using Tischreservierung.Data;
-using Tischreservierung.Data.Person;
-using Tischreservierung.Models;
-using Tischreservierung.Models.Person;
+using Persistence.Data;
+using Persistence.Data.Person;
+using Core.Contracts;
+using Core.Models.Person;
 using Xunit.Sdk;
 
 namespace Tischreservierung.Tests.Person.Controller

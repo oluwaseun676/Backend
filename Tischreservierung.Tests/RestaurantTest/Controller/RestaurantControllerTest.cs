@@ -2,8 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System.Net;
 using Tischreservierung.Controllers;
-using Tischreservierung.Data.RestaurantRepo;
-using Tischreservierung.Models;
+using Persistence.Data.RestaurantRepo;
+using Core.Models;
+using Core.Contracts;
 
 namespace Tischreservierung.Tests.RestaurantTest.Controller
 {
@@ -73,7 +74,7 @@ namespace Tischreservierung.Tests.RestaurantTest.Controller
             Restaurant restaurant = new() { Id = restaurantId, Name = "R10" };
 
             var restaurantRepository = new Mock<IRestaurantRepository>();
-            restaurantRepository.Setup(r => r.InsertRestaurant(It.IsAny<Restaurant>()));
+            restaurantRepository.Setup(r => r.InsertRestaurant(It.IsAny<Restaurant>())).Returns(true);
             var restaurantController = new RestaurantsController(restaurantRepository.Object);
 
             var actionResult = await restaurantController.PostRestaurant(restaurant);
