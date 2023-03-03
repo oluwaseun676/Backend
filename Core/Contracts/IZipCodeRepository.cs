@@ -1,6 +1,6 @@
-﻿using Tischreservierung.Models;
+﻿using Core.Models;
 
-namespace Tischreservierung.Data
+namespace Core.Contracts
 {
     public interface IZipCodeRepository
     {
@@ -11,6 +11,8 @@ namespace Tischreservierung.Data
       
 
         Task<List<ZipCode>> GetByDistrict(string district);
+
+        Task<ZipCode?> GetByZipCodeAndLocation(string zipcode, string location);
 
         Task Save();
 

@@ -1,6 +1,6 @@
-﻿using Tischreservierung.Models.Person;
+﻿using Core.Models.Person;
 
-namespace Tischreservierung.Data.Person
+namespace Core.Contracts
 {
     public interface IEmployeeRepository
     {

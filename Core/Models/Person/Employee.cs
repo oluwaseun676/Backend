@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Tischreservierung.Models.Person
+namespace Core.Models.Person
 {
     public class Employee : Person
     {

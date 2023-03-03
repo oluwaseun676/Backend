@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Tischreservierung.Models;
+using Core.Models;
+using Core.Contracts;
 
 namespace Tischreservierung.Data.RestaurantRepo
 {
@@ -21,9 +22,15 @@ namespace Tischreservierung.Data.RestaurantRepo
         {
             return await _context.Restaurants.FindAsync(id);
         }
-        public void InsertRestaurant(Restaurant restaurant)
+        public bool InsertRestaurant(Restaurant restaurant)
         {
-            _context.Restaurants.Add(restaurant);
+            if (_context.Zipcodes.Contains(restaurant.ZipCode))
+            {
+                _context.Restaurants.Add(restaurant);
+                return true;
+            }
+
+            return false;
         }
 
         public void DeleteRestaurant(Restaurant restaurant)

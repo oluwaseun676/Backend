@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
-using Tischreservierung.Models;
+using Core.Models;
+using Core.Contracts;
 
 namespace Tischreservierung.Data
 {
@@ -28,6 +29,12 @@ namespace Tischreservierung.Data
         public async Task<List<ZipCode>> GetByZipCode(string zipcode)
         {
             return await _context.Zipcodes.Where(z => z.ZipCodeNr == zipcode).ToListAsync();
+        }
+
+        public async Task<ZipCode?> GetByZipCodeAndLocation(string zipcode, string location)
+        {
+            return await _context.Zipcodes.Where(z => z.ZipCodeNr == zipcode && z.Location == location)
+                .FirstOrDefaultAsync();
         }
 
         public Task<List<ZipCode>> GetZipCodes()

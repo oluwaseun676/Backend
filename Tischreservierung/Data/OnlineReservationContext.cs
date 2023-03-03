@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Security.Policy;
-using Tischreservierung.Models.Person;
-using Tischreservierung.Models;
+using Core.Models.Person;
+using Core.Models;
 
 namespace Tischreservierung.Data
 {

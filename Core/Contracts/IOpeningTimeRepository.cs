@@ -1,6 +1,6 @@
-﻿using Tischreservierung.Models;
+﻿using Core.Models;
 
-namespace Tischreservierung.Data.RestaurantRepo
+namespace Core.Contracts
 {
     public interface IOpeningTimeRepository
     {

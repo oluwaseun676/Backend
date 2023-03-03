@@ -6,7 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Tischreservierung.Data.RestaurantRepo;
-using Tischreservierung.Models;
+using Core.Models;
+using Core.Contracts;
 
 namespace Tischreservierung.Controllers
 {

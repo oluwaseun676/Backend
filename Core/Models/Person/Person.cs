@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
-namespace Tischreservierung.Models.Person
+namespace Core.Models.Person
 {
     [Index(nameof(EMail), IsUnique = true)]
     public class Person

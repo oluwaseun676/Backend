@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Tischreservierung.Models.Person
+namespace Core.Models.Person
 {
     [Index(nameof(CustomerNumber), IsUnique = true)]
     public class Customer : Person

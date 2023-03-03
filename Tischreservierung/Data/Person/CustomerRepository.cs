@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.EntityFrameworkCore;
-using Tischreservierung.Models.Person;
+using Core.Models.Person;
+using Core.Contracts;
 
 namespace Tischreservierung.Data.Person
 {

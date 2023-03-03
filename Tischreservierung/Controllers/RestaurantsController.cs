@@ -6,7 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Tischreservierung.Data.RestaurantRepo;
-using Tischreservierung.Models;
+using Core.Models;
+using Core.Contracts;
 
 namespace Tischreservierung.Controllers
 {
@@ -16,9 +17,12 @@ namespace Tischreservierung.Controllers
     {
         private readonly IRestaurantRepository _repository;
 
-        public RestaurantsController(IRestaurantRepository repository)
+
+        private readonly ILogger<RestaurantsController> _logger;
+        public RestaurantsController(IRestaurantRepository repository, ILogger<RestaurantsController> logger)
         {
             _repository = repository;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -45,10 +49,16 @@ namespace Tischreservierung.Controllers
         [HttpPost]
         public async Task<ActionResult<Restaurant>> PostRestaurant(Restaurant restaurant)
         {
-            _repository.InsertRestaurant(restaurant);
-            await _repository.Save();
+            _logger.LogInformation(restaurant.Name);
+            bool inserted = _repository.InsertRestaurant(restaurant);
+            if (inserted)
+            {
+                await _repository.Save();
 
-            return CreatedAtAction("GetRestaurant", new { id = restaurant.Id }, restaurant);
+                return CreatedAtAction("GetRestaurant", new { id = restaurant.Id }, restaurant);
+            }
+
+            return NotFound("ZipCode existiert nicht!");
         }
 
         [HttpDelete("{id}")]

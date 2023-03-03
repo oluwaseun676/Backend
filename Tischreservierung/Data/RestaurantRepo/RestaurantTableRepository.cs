@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Tischreservierung.Models;
+using Core.Models;
+using Core.Contracts;
 
 namespace Tischreservierung.Data.RestaurantRepo
 {

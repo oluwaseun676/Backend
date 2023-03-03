@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Tischreservierung.Models
+namespace Core.Models
 {
     public class RestaurantCategory
     {

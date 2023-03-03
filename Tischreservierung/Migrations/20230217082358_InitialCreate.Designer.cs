@@ -12,7 +12,7 @@ using Tischreservierung.Data;
 namespace Tischreservierung.Migrations
 {
     [DbContext(typeof(OnlineReservationContext))]
-    [Migration("20230118131711_InitialCreate")]
+    [Migration("20230217082358_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -126,11 +126,11 @@ namespace Tischreservierung.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Address")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Address")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
