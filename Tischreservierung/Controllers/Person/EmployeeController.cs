@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Tischreservierung.Data.Person;
-using Tischreservierung.Models.Person;
+using Persistence.Data.Person;
+using Core.Models.Person;
+using Core.Contracts;
 
 namespace Tischreservierung.Controllers.Person
 {

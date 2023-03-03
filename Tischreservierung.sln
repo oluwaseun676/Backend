@@ -6,6 +6,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tischreservierung", "Tischr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tischreservierung.Tests", "Tischreservierung.Tests\Tischreservierung.Tests.csproj", "{A4D32BCC-F95E-4CF6-96C6-12C535EE42BF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{2C012C81-734F-40EF-8EAB-F40524F95B4D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Persistence", "Persistence\Persistence.csproj", "{245CF01F-F4F6-4E22-8E3C-B69FC18FEC9C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +24,14 @@ Global
 		{A4D32BCC-F95E-4CF6-96C6-12C535EE42BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4D32BCC-F95E-4CF6-96C6-12C535EE42BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4D32BCC-F95E-4CF6-96C6-12C535EE42BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C012C81-734F-40EF-8EAB-F40524F95B4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C012C81-734F-40EF-8EAB-F40524F95B4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C012C81-734F-40EF-8EAB-F40524F95B4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C012C81-734F-40EF-8EAB-F40524F95B4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{245CF01F-F4F6-4E22-8E3C-B69FC18FEC9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{245CF01F-F4F6-4E22-8E3C-B69FC18FEC9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{245CF01F-F4F6-4E22-8E3C-B69FC18FEC9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{245CF01F-F4F6-4E22-8E3C-B69FC18FEC9C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

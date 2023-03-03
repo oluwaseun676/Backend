@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Tischreservierung.Data;
-using Tischreservierung.Models;
+using Persistence.Data;
+using Core.Models;
+using Core.Contracts;
 
 namespace Tischreservierung.Controllers
 {
@@ -53,6 +54,14 @@ namespace Tischreservierung.Controllers
             return Ok(await _repository.GetByDistrict(district));
 
         }
-       
+
+        [HttpGet("byZipCodeAndLocation")]
+        public async Task<ActionResult<IEnumerable<ZipCode>>> GetZipcodesByZipCodeAndLocation
+            (string zipZode, string location)
+        {
+            return Ok(await _repository.GetByZipCodeAndLocation(zipZode,location));
+
+        }
+
     }
 }
