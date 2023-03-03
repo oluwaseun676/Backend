@@ -2,7 +2,7 @@
 using Core.Models.Person;
 using Core.Contracts;
 
-namespace Tischreservierung.Data.Person
+namespace Persistence.Data.Person
 {
     public class EmployeeRepository : IEmployeeRepository
     {

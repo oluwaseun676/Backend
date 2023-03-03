@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization.Infrastructure;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Core.Models.Person;
 using Core.Contracts;
 
-namespace Tischreservierung.Data.Person
+namespace Persistence.Data.Person
 {
     public class CustomerRepository : ICustomerRepository
     {

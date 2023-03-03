@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Tischreservierung.Data;
-using Tischreservierung.Data.RestaurantRepo;
+using Persistence.Data;
+using Persistence.Data.RestaurantRepo;
 using Core.Contracts;
 
 var builder = WebApplication.CreateBuilder(args);

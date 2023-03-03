@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Tischreservierung.Data;
+using Persistence.Data;
 using Core.Models;
 using Core.Contracts;
 

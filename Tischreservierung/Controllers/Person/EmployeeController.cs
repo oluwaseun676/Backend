@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Tischreservierung.Data.Person;
+using Persistence.Data.Person;
 using Core.Models.Person;
 using Core.Contracts;
 

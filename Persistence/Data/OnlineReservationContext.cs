@@ -3,7 +3,7 @@ using System.Security.Policy;
 using Core.Models.Person;
 using Core.Models;
 
-namespace Tischreservierung.Data
+namespace Persistence.Data
 {
     public class OnlineReservationContext : DbContext
     {

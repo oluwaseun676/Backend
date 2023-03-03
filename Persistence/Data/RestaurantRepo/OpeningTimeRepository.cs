@@ -2,7 +2,7 @@
 using Core.Models;
 using Core.Contracts;
 
-namespace Tischreservierung.Data.RestaurantRepo
+namespace Persistence.Data.RestaurantRepo
 {
     public class OpeningTimeRepository : IOpeningTimeRepository
     {

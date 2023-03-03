@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Core.Models;
 using Core.Contracts;
 
-namespace Tischreservierung.Data
+namespace Persistence.Data
 {
 
     public class ZipCodeRepository : IZipCodeRepository
