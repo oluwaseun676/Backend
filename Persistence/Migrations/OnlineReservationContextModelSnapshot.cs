@@ -8,7 +8,7 @@ using Persistence.Data;
 
 #nullable disable
 
-namespace Tischreservierung.Migrations
+namespace Persistence.Migrations
 {
     [DbContext(typeof(OnlineReservationContext))]
     partial class OnlineReservationContextModelSnapshot : ModelSnapshot
@@ -22,22 +22,7 @@ namespace Tischreservierung.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("RestaurantRestaurantCategory", b =>
-                {
-                    b.Property<string>("RestaurantTypesCategory")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("RestaurantsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("RestaurantTypesCategory", "RestaurantsId");
-
-                    b.HasIndex("RestaurantsId");
-
-                    b.ToTable("RestaurantRestaurantCategory");
-                });
-
-            modelBuilder.Entity("Tischreservierung.Models.Person.Customer", b =>
+            modelBuilder.Entity("Core.Models.Person.Customer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -76,7 +61,7 @@ namespace Tischreservierung.Migrations
                     b.ToTable("Customers");
                 });
 
-            modelBuilder.Entity("Tischreservierung.Models.Person.Employee", b =>
+            modelBuilder.Entity("Core.Models.Person.Employee", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -116,7 +101,7 @@ namespace Tischreservierung.Migrations
                     b.ToTable("Employees");
                 });
 
-            modelBuilder.Entity("Tischreservierung.Models.Restaurant", b =>
+            modelBuilder.Entity("Core.Models.Restaurant", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -146,7 +131,7 @@ namespace Tischreservierung.Migrations
                     b.ToTable("Restaurants");
                 });
 
-            modelBuilder.Entity("Tischreservierung.Models.RestaurantCategory", b =>
+            modelBuilder.Entity("Core.Models.RestaurantCategory", b =>
                 {
                     b.Property<string>("Category")
                         .HasColumnType("nvarchar(450)");
@@ -156,7 +141,7 @@ namespace Tischreservierung.Migrations
                     b.ToTable("RestaurantCategory");
                 });
 
-            modelBuilder.Entity("Tischreservierung.Models.RestaurantOpeningTime", b =>
+            modelBuilder.Entity("Core.Models.RestaurantOpeningTime", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -183,7 +168,7 @@ namespace Tischreservierung.Migrations
                     b.ToTable("RestaurantOpeningTimes");
                 });
 
-            modelBuilder.Entity("Tischreservierung.Models.RestaurantTable", b =>
+            modelBuilder.Entity("Core.Models.RestaurantTable", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -204,7 +189,7 @@ namespace Tischreservierung.Migrations
                     b.ToTable("RestaurantTables");
                 });
 
-            modelBuilder.Entity("Tischreservierung.Models.ZipCode", b =>
+            modelBuilder.Entity("Core.Models.ZipCode", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -231,22 +216,22 @@ namespace Tischreservierung.Migrations
 
             modelBuilder.Entity("RestaurantRestaurantCategory", b =>
                 {
-                    b.HasOne("Tischreservierung.Models.RestaurantCategory", null)
-                        .WithMany()
-                        .HasForeignKey("RestaurantTypesCategory")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<string>("RestaurantTypesCategory")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.HasOne("Tischreservierung.Models.Restaurant", null)
-                        .WithMany()
-                        .HasForeignKey("RestaurantsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("RestaurantsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("RestaurantTypesCategory", "RestaurantsId");
+
+                    b.HasIndex("RestaurantsId");
+
+                    b.ToTable("RestaurantRestaurantCategory");
                 });
 
-            modelBuilder.Entity("Tischreservierung.Models.Person.Employee", b =>
+            modelBuilder.Entity("Core.Models.Person.Employee", b =>
                 {
-                    b.HasOne("Tischreservierung.Models.Restaurant", "Restaurant")
+                    b.HasOne("Core.Models.Restaurant", "Restaurant")
                         .WithMany()
                         .HasForeignKey("RestaurantId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -255,18 +240,18 @@ namespace Tischreservierung.Migrations
                     b.Navigation("Restaurant");
                 });
 
-            modelBuilder.Entity("Tischreservierung.Models.Restaurant", b =>
+            modelBuilder.Entity("Core.Models.Restaurant", b =>
                 {
-                    b.HasOne("Tischreservierung.Models.ZipCode", "ZipCode")
+                    b.HasOne("Core.Models.ZipCode", "ZipCode")
                         .WithMany()
                         .HasForeignKey("ZipCodeId");
 
                     b.Navigation("ZipCode");
                 });
 
-            modelBuilder.Entity("Tischreservierung.Models.RestaurantOpeningTime", b =>
+            modelBuilder.Entity("Core.Models.RestaurantOpeningTime", b =>
                 {
-                    b.HasOne("Tischreservierung.Models.Restaurant", "Restaurant")
+                    b.HasOne("Core.Models.Restaurant", "Restaurant")
                         .WithMany("OpeningTimes")
                         .HasForeignKey("RestaurantId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -275,9 +260,9 @@ namespace Tischreservierung.Migrations
                     b.Navigation("Restaurant");
                 });
 
-            modelBuilder.Entity("Tischreservierung.Models.RestaurantTable", b =>
+            modelBuilder.Entity("Core.Models.RestaurantTable", b =>
                 {
-                    b.HasOne("Tischreservierung.Models.Restaurant", "Restaurant")
+                    b.HasOne("Core.Models.Restaurant", "Restaurant")
                         .WithMany("Tables")
                         .HasForeignKey("RestaurantId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -286,7 +271,22 @@ namespace Tischreservierung.Migrations
                     b.Navigation("Restaurant");
                 });
 
-            modelBuilder.Entity("Tischreservierung.Models.Restaurant", b =>
+            modelBuilder.Entity("RestaurantRestaurantCategory", b =>
+                {
+                    b.HasOne("Core.Models.RestaurantCategory", null)
+                        .WithMany()
+                        .HasForeignKey("RestaurantTypesCategory")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Models.Restaurant", null)
+                        .WithMany()
+                        .HasForeignKey("RestaurantsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Core.Models.Restaurant", b =>
                 {
                     b.Navigation("OpeningTimes");
 

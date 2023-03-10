@@ -17,8 +17,6 @@ namespace Tischreservierung.Controllers
     {
         private readonly IRestaurantRepository _repository;
 
-
-        //private readonly ILogger<RestaurantsController> _logger;
         public RestaurantsController(IRestaurantRepository repository)
         {
             _repository = repository;
@@ -48,7 +46,6 @@ namespace Tischreservierung.Controllers
         [HttpPost]
         public async Task<ActionResult<Restaurant>> PostRestaurant(Restaurant restaurant)
         {
-            //_logger.LogInformation(restaurant.Name);
             bool inserted = _repository.InsertRestaurant(restaurant);
             if (inserted)
             {
