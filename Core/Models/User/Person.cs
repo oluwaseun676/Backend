@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
-namespace Core.Models.Person
+namespace Core.Models.User
 {
     [Index(nameof(EMail), IsUnique = true)]
     public class Person

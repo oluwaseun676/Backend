@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Core.Models.Person
+namespace Core.Models.User
 {
     public class Employee : Person
     {
