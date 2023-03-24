@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Persistence.Data;
 using Persistence.Data.RestaurantRepo;
 using Core.Contracts;
-using Persistence.Data.Person;
+using Persistence.Data.User;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<OnlineReservationContext>(options =>

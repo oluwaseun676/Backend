@@ -17,10 +17,9 @@ namespace Persistence.Data.User
             _context = context;
         }
 
-        public async Task<Person?> CheckPassword(string email, string password)
+        public Person? CheckPassword(string email, string password)
         {
-            throw new NotImplementedException();
-            //return await _context.
+            return _context.Persons.Where(p => p.EMail == email && password == p.Password).SingleOrDefault();
         }
     }
 }
