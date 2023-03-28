@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Persistence.Data.RestaurantRepo;
 using Core.Models;
 using Core.Contracts;
+using Core.DTO;
 
 namespace Tischreservierung.Controllers
 {
@@ -44,17 +45,11 @@ namespace Tischreservierung.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Restaurant>> PostRestaurant(Restaurant restaurant)
+        public async Task<ActionResult<Restaurant>> PostRestaurant(DTO_RestaurantPost restaurant)
         {
-            bool inserted = _repository.InsertRestaurant(restaurant);
-            if (inserted)
-            {
-                await _repository.Save();
-
-                return CreatedAtAction("GetRestaurant", new { id = restaurant.Id }, restaurant);
-            }
-
-            return NotFound("ZipCode existiert nicht!");
+            Restaurant res = await _repository.InsertRestaurantAsync(restaurant);
+            await _repository.Save();
+            return Ok(res);
         }
 
         [HttpDelete("{id}")]

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Persistence.Migrations
 {
-    public partial class intialcreate : Migration
+    public partial class InitialMigrate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -24,17 +24,6 @@ namespace Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Customers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "RestaurantCategory",
-                columns: table => new
-                {
-                    Category = table.Column<string>(type: "nvarchar(450)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_RestaurantCategory", x => x.Category);
                 });
 
             migrationBuilder.CreateTable(
@@ -59,7 +48,7 @@ namespace Persistence.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ZipCodeId = table.Column<int>(type: "int", nullable: true),
+                    ZipCodeId = table.Column<int>(type: "int", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     StreetNr = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -70,7 +59,8 @@ namespace Persistence.Migrations
                         name: "FK_Restaurants_Zipcodes_ZipCodeId",
                         column: x => x.ZipCodeId,
                         principalTable: "Zipcodes",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -98,6 +88,23 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "RestaurantCategory",
+                columns: table => new
+                {
+                    Category = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    RestaurantId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RestaurantCategory", x => x.Category);
+                    table.ForeignKey(
+                        name: "FK_RestaurantCategory_Restaurants_RestaurantId",
+                        column: x => x.RestaurantId,
+                        principalTable: "Restaurants",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RestaurantOpeningTimes",
                 columns: table => new
                 {
@@ -114,30 +121,6 @@ namespace Persistence.Migrations
                     table.ForeignKey(
                         name: "FK_RestaurantOpeningTimes_Restaurants_RestaurantId",
                         column: x => x.RestaurantId,
-                        principalTable: "Restaurants",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "RestaurantRestaurantCategory",
-                columns: table => new
-                {
-                    RestaurantTypesCategory = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    RestaurantsId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_RestaurantRestaurantCategory", x => new { x.RestaurantTypesCategory, x.RestaurantsId });
-                    table.ForeignKey(
-                        name: "FK_RestaurantRestaurantCategory_RestaurantCategory_RestaurantTypesCategory",
-                        column: x => x.RestaurantTypesCategory,
-                        principalTable: "RestaurantCategory",
-                        principalColumn: "Category",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_RestaurantRestaurantCategory_Restaurants_RestaurantsId",
-                        column: x => x.RestaurantsId,
                         principalTable: "Restaurants",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -187,14 +170,14 @@ namespace Persistence.Migrations
                 column: "RestaurantId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RestaurantOpeningTimes_RestaurantId",
-                table: "RestaurantOpeningTimes",
+                name: "IX_RestaurantCategory_RestaurantId",
+                table: "RestaurantCategory",
                 column: "RestaurantId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RestaurantRestaurantCategory_RestaurantsId",
-                table: "RestaurantRestaurantCategory",
-                column: "RestaurantsId");
+                name: "IX_RestaurantOpeningTimes_RestaurantId",
+                table: "RestaurantOpeningTimes",
+                column: "RestaurantId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Restaurants_ZipCodeId",
@@ -216,16 +199,13 @@ namespace Persistence.Migrations
                 name: "Employees");
 
             migrationBuilder.DropTable(
+                name: "RestaurantCategory");
+
+            migrationBuilder.DropTable(
                 name: "RestaurantOpeningTimes");
 
             migrationBuilder.DropTable(
-                name: "RestaurantRestaurantCategory");
-
-            migrationBuilder.DropTable(
                 name: "RestaurantTables");
-
-            migrationBuilder.DropTable(
-                name: "RestaurantCategory");
 
             migrationBuilder.DropTable(
                 name: "Restaurants");

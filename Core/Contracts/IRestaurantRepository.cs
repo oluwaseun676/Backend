@@ -1,4 +1,5 @@
-﻿using Core.Models;
+﻿using Core.DTO;
+using Core.Models;
 
 namespace Core.Contracts
 {
@@ -6,7 +7,8 @@ namespace Core.Contracts
     {
         Task<IEnumerable<Restaurant>> GetRestaurants();
         Task<Restaurant?> GetRestaurantById(int id);
-        bool InsertRestaurant(Restaurant restaurant);
+
+        Task<Restaurant> InsertRestaurantAsync(DTO_RestaurantPost restaurant);
         void DeleteRestaurant(Restaurant restaurant);
         void UpdateRestaurant(Restaurant restaurant);
         Task Save();

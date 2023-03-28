@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Core.Models;
 using Core.Contracts;
+using Core.DTO;
+using Core.Models.Person;
 
 namespace Persistence.Data.RestaurantRepo
 {
@@ -22,14 +24,35 @@ namespace Persistence.Data.RestaurantRepo
         {
             return await _context.Restaurants.FindAsync(id);
         }
-        public bool InsertRestaurant(Restaurant restaurant)
+        public async Task<Restaurant> InsertRestaurantAsync(DTO_RestaurantPost restaurant)
         {
-            if (!_context.Zipcodes.Contains(restaurant.ZipCode))
+            Restaurant res = new Restaurant()
             {
-                _context.Restaurants.Add(restaurant);
-                return true;
-            }
-            return false;
+                Name = restaurant.Name,
+                Address = restaurant.Address,
+                StreetNr = restaurant.StreetNr,
+                ZipCodeId = restaurant.ZipCode!.Id,
+                RestaurantTypes = restaurant.Categories!.ToList()
+            };
+
+            Employee emp = restaurant.Employee!;
+            emp.Restaurant = res;
+            RestaurantOpeningTime[] openings = restaurant.Openings!.Select(o => new RestaurantOpeningTime()
+            {
+                Day = o.Day,
+                OpeningTime = new DateTime(2000, 1, 1, Int32.Parse(o.OpenFrom.Split(':')[0])
+                , Int32.Parse(o.OpenFrom.Split(':')[1]),0),
+                ClosingTime = new DateTime(2000, 1, 1, Int32.Parse(o.OpenTo.Split(':')[0])
+                , Int32.Parse(o.OpenTo.Split(':')[1]), 0),
+                Restaurant = res
+
+
+            }).ToArray();
+
+            await _context.Restaurants.AddAsync(res);
+            await _context.RestaurantOpeningTimes.AddRangeAsync(openings);
+            await _context.Employees.AddAsync(emp);
+            return res;
         }
 
         public void DeleteRestaurant(Restaurant restaurant)

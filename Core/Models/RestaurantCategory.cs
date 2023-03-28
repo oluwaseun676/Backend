@@ -6,6 +6,5 @@ namespace Core.Models
     {
         [Key]
         public string Category { get; set; } = string.Empty;
-        public List<Restaurant>? Restaurants { get; set; }
     }
 }

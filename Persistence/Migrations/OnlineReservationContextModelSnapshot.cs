@@ -121,7 +121,7 @@ namespace Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ZipCodeId")
+                    b.Property<int>("ZipCodeId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -136,7 +136,12 @@ namespace Persistence.Migrations
                     b.Property<string>("Category")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int?>("RestaurantId")
+                        .HasColumnType("int");
+
                     b.HasKey("Category");
+
+                    b.HasIndex("RestaurantId");
 
                     b.ToTable("RestaurantCategory");
                 });
@@ -214,21 +219,6 @@ namespace Persistence.Migrations
                     b.ToTable("Zipcodes");
                 });
 
-            modelBuilder.Entity("RestaurantRestaurantCategory", b =>
-                {
-                    b.Property<string>("RestaurantTypesCategory")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("RestaurantsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("RestaurantTypesCategory", "RestaurantsId");
-
-                    b.HasIndex("RestaurantsId");
-
-                    b.ToTable("RestaurantRestaurantCategory");
-                });
-
             modelBuilder.Entity("Core.Models.Person.Employee", b =>
                 {
                     b.HasOne("Core.Models.Restaurant", "Restaurant")
@@ -244,15 +234,24 @@ namespace Persistence.Migrations
                 {
                     b.HasOne("Core.Models.ZipCode", "ZipCode")
                         .WithMany()
-                        .HasForeignKey("ZipCodeId");
+                        .HasForeignKey("ZipCodeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("ZipCode");
+                });
+
+            modelBuilder.Entity("Core.Models.RestaurantCategory", b =>
+                {
+                    b.HasOne("Core.Models.Restaurant", null)
+                        .WithMany("RestaurantTypes")
+                        .HasForeignKey("RestaurantId");
                 });
 
             modelBuilder.Entity("Core.Models.RestaurantOpeningTime", b =>
                 {
                     b.HasOne("Core.Models.Restaurant", "Restaurant")
-                        .WithMany("OpeningTimes")
+                        .WithMany()
                         .HasForeignKey("RestaurantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -271,24 +270,9 @@ namespace Persistence.Migrations
                     b.Navigation("Restaurant");
                 });
 
-            modelBuilder.Entity("RestaurantRestaurantCategory", b =>
-                {
-                    b.HasOne("Core.Models.RestaurantCategory", null)
-                        .WithMany()
-                        .HasForeignKey("RestaurantTypesCategory")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Core.Models.Restaurant", null)
-                        .WithMany()
-                        .HasForeignKey("RestaurantsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Core.Models.Restaurant", b =>
                 {
-                    b.Navigation("OpeningTimes");
+                    b.Navigation("RestaurantTypes");
 
                     b.Navigation("Tables");
                 });
