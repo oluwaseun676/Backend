@@ -18,6 +18,7 @@ builder.Services.AddScoped<IRestaurantCategoryRepository, RestaurantCategoryRepo
 builder.Services.AddScoped<IZipCodeRepository, ZipCodeRepository>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

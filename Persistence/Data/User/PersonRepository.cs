@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Core.Contracts;
 using Core.Models.User;
+using Microsoft.EntityFrameworkCore;
 
 namespace Persistence.Data.User
 {
@@ -17,9 +18,9 @@ namespace Persistence.Data.User
             _context = context;
         }
 
-        public Person? CheckPassword(string email, string password)
+        public async Task<Person?> CheckPassword(string email, string password)
         {
-            return _context.Persons.Where(p => p.EMail == email && password == p.Password).SingleOrDefault();
+            return await _context.Persons.Where(p => p.EMail.ToLower() == email.ToLower() && password == p.Password).SingleOrDefaultAsync();
         }
     }
 }
