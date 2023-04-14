@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Core.Models
 {
@@ -13,6 +14,7 @@ namespace Core.Models
         public DateTime ClosingTime { get; set; }
         [ForeignKey(nameof(Restaurant))]
         public int RestaurantId { get; set; }
+        [JsonIgnore]
         public Restaurant? Restaurant { get; set; }
     }
 }
