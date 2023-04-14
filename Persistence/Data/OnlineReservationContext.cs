@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Security.Policy;
-using Core.Models.Person;
+using Core.Models.User;
 using Core.Models;
 
 namespace Persistence.Data
@@ -23,6 +23,7 @@ namespace Persistence.Data
                 new Category() { Id=2, Name="Arabisch"});
         }
 
+        public DbSet<Person> Persons => Set<Person>();
         public DbSet<Customer> Customers => Set<Customer>();
 
         public DbSet<Employee> Employees => Set<Employee>();

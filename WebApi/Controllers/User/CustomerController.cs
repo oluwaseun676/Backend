@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
-using Persistence.Data.Person;
+using Persistence.Data.User;
 using Core.Models;
-using Core.Models.Person;
+using Core.Models.User;
 using Core.Contracts;
 
 namespace Tischreservierung.Controllers.Person
@@ -44,7 +44,7 @@ namespace Tischreservierung.Controllers.Person
             return NoContent();
         }
 
-        [HttpPost("{data}")]
+        [HttpPost()]
         public async Task<ActionResult> PostCustomer(Customer data)
         {
             bool check = _customerRepository.SetCustomer(data);

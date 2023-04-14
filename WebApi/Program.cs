@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Persistence.Data;
 using Persistence.Data.RestaurantRepo;
 using Core.Contracts;
-using Persistence.Data.Person;
+using Persistence.Data.User;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<OnlineReservationContext>(options =>
@@ -17,6 +17,7 @@ builder.Services.AddScoped<IRestaurantCategoryRepository, RestaurantCategoryRepo
 builder.Services.AddScoped<IZipCodeRepository, ZipCodeRepository>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
