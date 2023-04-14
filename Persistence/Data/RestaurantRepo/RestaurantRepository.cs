@@ -24,10 +24,10 @@ namespace Persistence.Data.RestaurantRepo
         {
             return await _context.Restaurants.FindAsync(id);
         }
-        public async Task<bool> InsertRestaurantAsync(DTO_RestaurantPost restaurant)
+        public async Task<Restaurant?> InsertRestaurantAsync(DTO_RestaurantPost restaurant)
         {
             if (_context.Persons.Count(p => p.EMail == restaurant.Employee!.EMail) != 0)
-                return false;
+                return null;
 
             Restaurant res = new Restaurant()
             {
@@ -53,10 +53,10 @@ namespace Persistence.Data.RestaurantRepo
 
             }).ToArray();
 
-            await _context.Restaurants.AddAsync(res);
+            _context.Restaurants.Add(res);
             await _context.RestaurantOpeningTimes.AddRangeAsync(openings);
             await _context.Employees.AddAsync(emp);
-            return true;
+            return res;
         }
 
         public void DeleteRestaurant(Restaurant restaurant)
