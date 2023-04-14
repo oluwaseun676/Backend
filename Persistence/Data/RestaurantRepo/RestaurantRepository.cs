@@ -2,7 +2,7 @@
 using Core.Models;
 using Core.Contracts;
 using Core.DTO;
-using Core.Models.Person;
+using Core.Models.User;
 
 namespace Persistence.Data.RestaurantRepo
 {
@@ -24,16 +24,20 @@ namespace Persistence.Data.RestaurantRepo
         {
             return await _context.Restaurants.FindAsync(id);
         }
-        public async Task<Restaurant> InsertRestaurantAsync(DTO_RestaurantPost restaurant)
+        public async Task<bool> InsertRestaurantAsync(DTO_RestaurantPost restaurant)
         {
+            if (_context.Persons.Count(p => p.EMail == restaurant.Employee!.EMail) != 0)
+                return false;
+
             Restaurant res = new Restaurant()
             {
                 Name = restaurant.Name,
                 Address = restaurant.Address,
                 StreetNr = restaurant.StreetNr,
-                ZipCodeId = restaurant.ZipCode!.Id,
-                Categories = _context.Categories.Where(c => restaurant.Categories!.Contains(c)).ToList()
+                ZipCodeId = restaurant.ZipCode!.Id
             };
+            if (restaurant.Categories != null)
+                res.Categories = _context.Categories.Where(c => restaurant.Categories!.Contains(c)).ToList();
 
             Employee emp = restaurant.Employee!;
             emp.Restaurant = res;
@@ -52,7 +56,7 @@ namespace Persistence.Data.RestaurantRepo
             await _context.Restaurants.AddAsync(res);
             await _context.RestaurantOpeningTimes.AddRangeAsync(openings);
             await _context.Employees.AddAsync(emp);
-            return res;
+            return true;
         }
 
         public void DeleteRestaurant(Restaurant restaurant)
