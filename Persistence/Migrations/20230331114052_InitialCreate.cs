@@ -5,10 +5,23 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Persistence.Migrations
 {
-    public partial class InitialMigrate : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Categories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Categories", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Customers",
                 columns: table => new
@@ -64,6 +77,30 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CategoryRestaurant",
+                columns: table => new
+                {
+                    CategoriesId = table.Column<int>(type: "int", nullable: false),
+                    RestaurantsId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CategoryRestaurant", x => new { x.CategoriesId, x.RestaurantsId });
+                    table.ForeignKey(
+                        name: "FK_CategoryRestaurant_Categories_CategoriesId",
+                        column: x => x.CategoriesId,
+                        principalTable: "Categories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CategoryRestaurant_Restaurants_RestaurantsId",
+                        column: x => x.RestaurantsId,
+                        principalTable: "Restaurants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Employees",
                 columns: table => new
                 {
@@ -85,23 +122,6 @@ namespace Persistence.Migrations
                         principalTable: "Restaurants",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "RestaurantCategory",
-                columns: table => new
-                {
-                    Category = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    RestaurantId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_RestaurantCategory", x => x.Category);
-                    table.ForeignKey(
-                        name: "FK_RestaurantCategory_Restaurants_RestaurantId",
-                        column: x => x.RestaurantId,
-                        principalTable: "Restaurants",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -146,6 +166,29 @@ namespace Persistence.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "Categories",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Amerikanisch" },
+                    { 2, "Arabisch" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Zipcodes",
+                columns: new[] { "Id", "District", "Location", "ZipCodeNr" },
+                values: new object[,]
+                {
+                    { 1, "Linz-Land", "Enns", "4470" },
+                    { 2, "Linz", "Linz", "4020" }
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CategoryRestaurant_RestaurantsId",
+                table: "CategoryRestaurant",
+                column: "RestaurantsId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_Customers_CustomerNumber",
                 table: "Customers",
@@ -170,11 +213,6 @@ namespace Persistence.Migrations
                 column: "RestaurantId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RestaurantCategory_RestaurantId",
-                table: "RestaurantCategory",
-                column: "RestaurantId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_RestaurantOpeningTimes_RestaurantId",
                 table: "RestaurantOpeningTimes",
                 column: "RestaurantId");
@@ -193,19 +231,22 @@ namespace Persistence.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "CategoryRestaurant");
+
+            migrationBuilder.DropTable(
                 name: "Customers");
 
             migrationBuilder.DropTable(
                 name: "Employees");
 
             migrationBuilder.DropTable(
-                name: "RestaurantCategory");
-
-            migrationBuilder.DropTable(
                 name: "RestaurantOpeningTimes");
 
             migrationBuilder.DropTable(
                 name: "RestaurantTables");
+
+            migrationBuilder.DropTable(
+                name: "Categories");
 
             migrationBuilder.DropTable(
                 name: "Restaurants");

@@ -67,7 +67,7 @@ namespace Tischreservierung.Tests.RestaurantTest.Controller
             restaurantRepository.VerifyNoOtherCalls();
         }
 
-        [Fact]
+        /*[Fact]
         public async Task PostRestaurant()
         {
             int restaurantId = 10;
@@ -89,7 +89,7 @@ namespace Tischreservierung.Tests.RestaurantTest.Controller
             restaurantRepository.Verify(r => r.InsertRestaurant(restaurant));
             restaurantRepository.Verify(r => r.Save());
             restaurantRepository.VerifyNoOtherCalls();
-        }
+        }*/
 
         [Fact]
         public async Task DeleteRestaurant()

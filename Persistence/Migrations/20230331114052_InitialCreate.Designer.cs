@@ -12,8 +12,8 @@ using Persistence.Data;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(OnlineReservationContext))]
-    [Migration("20230328170614_InitialMigrate")]
-    partial class InitialMigrate
+    [Migration("20230331114052_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,6 +23,50 @@ namespace Persistence.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("CategoryRestaurant", b =>
+                {
+                    b.Property<int>("CategoriesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RestaurantsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CategoriesId", "RestaurantsId");
+
+                    b.HasIndex("RestaurantsId");
+
+                    b.ToTable("CategoryRestaurant");
+                });
+
+            modelBuilder.Entity("Core.Models.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Amerikanisch"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Arabisch"
+                        });
+                });
 
             modelBuilder.Entity("Core.Models.Person.Customer", b =>
                 {
@@ -133,21 +177,6 @@ namespace Persistence.Migrations
                     b.ToTable("Restaurants");
                 });
 
-            modelBuilder.Entity("Core.Models.RestaurantCategory", b =>
-                {
-                    b.Property<string>("Category")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int?>("RestaurantId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Category");
-
-                    b.HasIndex("RestaurantId");
-
-                    b.ToTable("RestaurantCategory");
-                });
-
             modelBuilder.Entity("Core.Models.RestaurantOpeningTime", b =>
                 {
                     b.Property<int>("Id")
@@ -219,6 +248,37 @@ namespace Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Zipcodes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            District = "Linz-Land",
+                            Location = "Enns",
+                            ZipCodeNr = "4470"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            District = "Linz",
+                            Location = "Linz",
+                            ZipCodeNr = "4020"
+                        });
+                });
+
+            modelBuilder.Entity("CategoryRestaurant", b =>
+                {
+                    b.HasOne("Core.Models.Category", null)
+                        .WithMany()
+                        .HasForeignKey("CategoriesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Models.Restaurant", null)
+                        .WithMany()
+                        .HasForeignKey("RestaurantsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Core.Models.Person.Employee", b =>
@@ -241,13 +301,6 @@ namespace Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("ZipCode");
-                });
-
-            modelBuilder.Entity("Core.Models.RestaurantCategory", b =>
-                {
-                    b.HasOne("Core.Models.Restaurant", null)
-                        .WithMany("RestaurantTypes")
-                        .HasForeignKey("RestaurantId");
                 });
 
             modelBuilder.Entity("Core.Models.RestaurantOpeningTime", b =>
@@ -274,8 +327,6 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Core.Models.Restaurant", b =>
                 {
-                    b.Navigation("RestaurantTypes");
-
                     b.Navigation("Tables");
                 });
 #pragma warning restore 612, 618

@@ -16,7 +16,7 @@ namespace Core.DTO
         public string Address { get; set; } = string.Empty;
         public string StreetNr { get; set; } = string.Empty;
 
-        public RestaurantCategory[]? Categories { get; set; }
+        public Category[]? Categories { get; set; }
         public DTO_OpeningTime[]? Openings { get; set; }
 
         public Employee? Employee { get; set; }

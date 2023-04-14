@@ -16,7 +16,7 @@ namespace Core.Models
         public string Address { get; set; } = string.Empty;
         public string StreetNr { get; set; } = string.Empty;
 
-        public List<RestaurantCategory>? RestaurantTypes { get; set; }
-        public List<RestaurantTable>? Tables { get; set; }
+        public List<RestaurantTable> Tables { get; set; } = new List<RestaurantTable>();
+        public List<Category> Categories { get; set; } = new List<Category>();
     }
 }

@@ -43,7 +43,7 @@ namespace Tischreservierung.Tests.RestaurantTest.Controller
             var actionResult = await controller.GetRestaurantCategory("Pizza");
 
             Assert.NotNull(actionResult);
-            Assert.Equal("Pizza", actionResult.Value!.Category);
+            Assert.Equal("Pizza", actionResult.Value!.Name);
 
             repository.Verify(r => r.GetRestaurantCategory(It.IsAny<string>()));
             repository.VerifyNoOtherCalls();
@@ -101,10 +101,10 @@ namespace Tischreservierung.Tests.RestaurantTest.Controller
 
 
             List<RestaurantCategory> restaurantCategories = new List<RestaurantCategory>();
-            restaurantCategories.Add(new RestaurantCategory() { Category = "Pizza", Restaurants = restaurants });
-            restaurantCategories.Add(new RestaurantCategory() { Category = "Pommes", Restaurants = restaurants });
+            restaurantCategories.Add(new RestaurantCategory() { Name = "Pizza", Restaurants = restaurants });
+            restaurantCategories.Add(new RestaurantCategory() { Name = "Pommes", Restaurants = restaurants });
             restaurants.Add(new Restaurant() { Id = 4, Name = "R4" });
-            restaurantCategories.Add(new RestaurantCategory() { Category = "Ita", Restaurants = restaurants });
+            restaurantCategories.Add(new RestaurantCategory() { Name = "Ita", Restaurants = restaurants });
             return restaurantCategories;
         }
     }

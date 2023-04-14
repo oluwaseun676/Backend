@@ -32,7 +32,7 @@ namespace Persistence.Data.RestaurantRepo
                 Address = restaurant.Address,
                 StreetNr = restaurant.StreetNr,
                 ZipCodeId = restaurant.ZipCode!.Id,
-                RestaurantTypes = restaurant.Categories!.ToList()
+                Categories = _context.Categories.Where(c => restaurant.Categories!.Contains(c)).ToList()
             };
 
             Employee emp = restaurant.Employee!;

@@ -23,13 +23,13 @@ namespace Tischreservierung.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<RestaurantCategory>>> GetRestaurantCategories()
+        public async Task<ActionResult<IEnumerable<Category>>> GetRestaurantCategories()
         {
             return Ok(await _restaurantCategoryRepository.GetRestaurantCategories());
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<RestaurantCategory>> GetRestaurantCategory(string id)
+        public async Task<ActionResult<Category>> GetRestaurantCategory(string id)
         {
             var restaurantCategory = await _restaurantCategoryRepository.GetRestaurantCategory(id);
 
@@ -42,12 +42,12 @@ namespace Tischreservierung.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<RestaurantCategory>> PostRestaurantCategory(RestaurantCategory restaurantCategory)
+        public async Task<ActionResult<Category>> PostRestaurantCategory(Category restaurantCategory)
         {
             _restaurantCategoryRepository.InsertRestaurantCategory(restaurantCategory);
             await _restaurantCategoryRepository.Save();
 
-            return CreatedAtAction("GetRestaurantCategory", new { id = restaurantCategory.Category }, restaurantCategory);
+            return CreatedAtAction("GetRestaurantCategory", new { id = restaurantCategory.Id }, restaurantCategory);
         }
 
         [HttpDelete("{id}")]

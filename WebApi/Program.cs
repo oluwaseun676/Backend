@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Persistence.Data;
 using Persistence.Data.RestaurantRepo;
 using Core.Contracts;

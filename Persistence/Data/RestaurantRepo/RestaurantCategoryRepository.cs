@@ -13,24 +13,24 @@ namespace Persistence.Data.RestaurantRepo
             _context = context;
         }
 
-        public void DeleteRestaurantCategory(RestaurantCategory restaurantCategory)
+        public void DeleteRestaurantCategory(Category restaurantCategory)
         {
-            _context.RestaurantCategory.Remove(restaurantCategory);
+            _context.Categories.Remove(restaurantCategory);
         }
 
-        public async Task<RestaurantCategory?> GetRestaurantCategory(string id)
+        public async Task<Category?> GetRestaurantCategory(string id)
         {
-            return await _context.RestaurantCategory.FindAsync(id);
+            return await _context.Categories.FindAsync(id);
         }
 
-        public async Task<IEnumerable<RestaurantCategory>> GetRestaurantCategories()
+        public async Task<IEnumerable<Category>> GetRestaurantCategories()
         {
-            return await _context.RestaurantCategory.ToListAsync();
+            return await _context.Categories.ToListAsync();
         }
 
-        public void InsertRestaurantCategory(RestaurantCategory restaurantCategory)
+        public void InsertRestaurantCategory(Category restaurantCategory)
         {
-            _context.RestaurantCategory.Add(restaurantCategory);
+            _context.Categories.Add(restaurantCategory);
         }
 
         public async Task Save()
