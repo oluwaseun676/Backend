@@ -12,8 +12,8 @@ using Persistence.Data;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(OnlineReservationContext))]
-    [Migration("20230310142000_intialcreate")]
-    partial class intialcreate
+    [Migration("20230331073506_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,85 +23,6 @@ namespace Persistence.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
-
-            modelBuilder.Entity("Core.Models.Person.Customer", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("CustomerNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("EMail")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("FamilyName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CustomerNumber")
-                        .IsUnique();
-
-                    b.HasIndex("EMail")
-                        .IsUnique();
-
-                    b.ToTable("Customers");
-                });
-
-            modelBuilder.Entity("Core.Models.Person.Employee", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("EMail")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("FamilyName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsAdmin")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RestaurantId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EMail")
-                        .IsUnique();
-
-                    b.HasIndex("RestaurantId");
-
-                    b.ToTable("Employees");
-                });
 
             modelBuilder.Entity("Core.Models.Restaurant", b =>
                 {
@@ -191,6 +112,44 @@ namespace Persistence.Migrations
                     b.ToTable("RestaurantTables");
                 });
 
+            modelBuilder.Entity("Core.Models.User.Person", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EMail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("FamilyName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EMail")
+                        .IsUnique();
+
+                    b.ToTable("Persons");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Person");
+                });
+
             modelBuilder.Entity("Core.Models.ZipCode", b =>
                 {
                     b.Property<int>("Id")
@@ -231,15 +190,34 @@ namespace Persistence.Migrations
                     b.ToTable("RestaurantRestaurantCategory");
                 });
 
-            modelBuilder.Entity("Core.Models.Person.Employee", b =>
+            modelBuilder.Entity("Core.Models.User.Customer", b =>
                 {
-                    b.HasOne("Core.Models.Restaurant", "Restaurant")
-                        .WithMany()
-                        .HasForeignKey("RestaurantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasBaseType("Core.Models.User.Person");
 
-                    b.Navigation("Restaurant");
+                    b.Property<string>("CustomerNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasIndex("CustomerNumber")
+                        .IsUnique()
+                        .HasFilter("[CustomerNumber] IS NOT NULL");
+
+                    b.HasDiscriminator().HasValue("Customer");
+                });
+
+            modelBuilder.Entity("Core.Models.User.Employee", b =>
+                {
+                    b.HasBaseType("Core.Models.User.Person");
+
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("RestaurantId")
+                        .HasColumnType("int");
+
+                    b.HasIndex("RestaurantId");
+
+                    b.HasDiscriminator().HasValue("Employee");
                 });
 
             modelBuilder.Entity("Core.Models.Restaurant", b =>
@@ -286,6 +264,17 @@ namespace Persistence.Migrations
                         .HasForeignKey("RestaurantsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Core.Models.User.Employee", b =>
+                {
+                    b.HasOne("Core.Models.Restaurant", "Restaurant")
+                        .WithMany()
+                        .HasForeignKey("RestaurantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Restaurant");
                 });
 
             modelBuilder.Entity("Core.Models.Restaurant", b =>

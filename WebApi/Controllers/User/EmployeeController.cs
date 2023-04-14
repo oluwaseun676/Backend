@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Persistence.Data.Person;
-using Core.Models.Person;
+using Persistence.Data.User;
+using Core.Models.User;
 using Core.Contracts;
 
 namespace Tischreservierung.Controllers.Person
@@ -29,7 +29,7 @@ namespace Tischreservierung.Controllers.Person
             return Ok(await _employeeRepository.GetByRestaurantId(id));
         }
 
-        [HttpPost("{data}")]
+        [HttpPost]
         public async Task<ActionResult> PostEmployee(Employee data)
         {
             _employeeRepository.SetEmployee(data);

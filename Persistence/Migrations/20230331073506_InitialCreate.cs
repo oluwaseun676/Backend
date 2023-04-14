@@ -5,27 +5,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Persistence.Migrations
 {
-    public partial class intialcreate : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Customers",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CustomerNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FamilyName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EMail = table.Column<string>(type: "nvarchar(450)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Customers", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "RestaurantCategory",
                 columns: table => new
@@ -74,23 +57,25 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Employees",
+                name: "Persons",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    IsAdmin = table.Column<bool>(type: "bit", nullable: false),
-                    RestaurantId = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FamilyName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EMail = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    EMail = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CustomerNumber = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    IsAdmin = table.Column<bool>(type: "bit", nullable: true),
+                    RestaurantId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Employees", x => x.Id);
+                    table.PrimaryKey("PK_Persons", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Employees_Restaurants_RestaurantId",
+                        name: "FK_Persons_Restaurants_RestaurantId",
                         column: x => x.RestaurantId,
                         principalTable: "Restaurants",
                         principalColumn: "Id",
@@ -164,26 +149,21 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Customers_CustomerNumber",
-                table: "Customers",
+                name: "IX_Persons_CustomerNumber",
+                table: "Persons",
                 column: "CustomerNumber",
-                unique: true);
+                unique: true,
+                filter: "[CustomerNumber] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Customers_EMail",
-                table: "Customers",
+                name: "IX_Persons_EMail",
+                table: "Persons",
                 column: "EMail",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Employees_EMail",
-                table: "Employees",
-                column: "EMail",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Employees_RestaurantId",
-                table: "Employees",
+                name: "IX_Persons_RestaurantId",
+                table: "Persons",
                 column: "RestaurantId");
 
             migrationBuilder.CreateIndex(
@@ -210,10 +190,7 @@ namespace Persistence.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Customers");
-
-            migrationBuilder.DropTable(
-                name: "Employees");
+                name: "Persons");
 
             migrationBuilder.DropTable(
                 name: "RestaurantOpeningTimes");

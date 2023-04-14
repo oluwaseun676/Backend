@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Core.Models.Person;
+using Core.Models.User;
 using Core.Contracts;
+using System.Xml.Linq;
 
-namespace Persistence.Data.Person
+namespace Persistence.Data.User
 {
     public class CustomerRepository : ICustomerRepository
     {
