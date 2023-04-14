@@ -1,12 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Tischreservierung.Controllers;
-using Persistence.Data.RestaurantRepo;
 using Core.Models;
 using Core.Contracts;
 
@@ -26,7 +20,7 @@ namespace Tischreservierung.Tests.RestaurantTest.Controller
 
             Assert.NotNull(result);
             Assert.Equal(200, result!.StatusCode);
-            Assert.Equal(3, ((List<RestaurantCategory>)result.Value!).Count());
+            Assert.Equal(3, ((List<Category>)result.Value!).Count());
 
             restaurantCategoryRepository.Verify(r => r.GetRestaurantCategories(), Times.Once);
             restaurantCategoryRepository.VerifyNoOtherCalls();
@@ -52,10 +46,10 @@ namespace Tischreservierung.Tests.RestaurantTest.Controller
         [Fact]
         public async Task InsertRestaurantCategory()
         {
-            RestaurantCategory restaurantCategory = GetRestaurantCategoryTestData()[0];
+            Category restaurantCategory = GetRestaurantCategoryTestData()[0];
 
             var repository = new Mock<IRestaurantCategoryRepository>();
-            repository.Setup(r => r.InsertRestaurantCategory(It.IsAny<RestaurantCategory>()));
+            repository.Setup(r => r.InsertRestaurantCategory(It.IsAny<Category>()));
             var controller = new RestaurantCategoriesController(repository.Object);
 
             var actionResult = await controller.PostRestaurantCategory(restaurantCategory);
@@ -65,7 +59,7 @@ namespace Tischreservierung.Tests.RestaurantTest.Controller
 
             Assert.NotNull(result);
             Assert.Equal(201, result!.StatusCode);
-            Assert.Equal(restaurantCategory, result.Value as RestaurantCategory);
+            Assert.Equal(restaurantCategory, result.Value as Category);
 
             repository.Verify(r => r.InsertRestaurantCategory(restaurantCategory));
             repository.Verify(r => r.Save());
@@ -78,8 +72,8 @@ namespace Tischreservierung.Tests.RestaurantTest.Controller
         {
             var repository = new Mock<IRestaurantCategoryRepository>();
 
-            repository.Setup(r => r.GetRestaurantCategory("Pizza")).ReturnsAsync(new RestaurantCategory());
-            repository.Setup(r => r.DeleteRestaurantCategory(It.IsAny<RestaurantCategory>()));
+            repository.Setup(r => r.GetRestaurantCategory("Pizza")).ReturnsAsync(new Category());
+            repository.Setup(r => r.DeleteRestaurantCategory(It.IsAny<Category>()));
             var controller = new RestaurantCategoriesController(repository.Object);
 
             var actionResult = await controller.DeleteRestaurantCategory("Pizza");
@@ -87,12 +81,12 @@ namespace Tischreservierung.Tests.RestaurantTest.Controller
             Assert.IsType<NoContentResult>(actionResult);
 
             repository.Verify(r => r.GetRestaurantCategory("Pizza"));
-            repository.Verify(r => r.DeleteRestaurantCategory(It.IsAny<RestaurantCategory>()));
+            repository.Verify(r => r.DeleteRestaurantCategory(It.IsAny<Category>()));
             repository.Verify(r => r.Save());
             repository.VerifyNoOtherCalls();
         }
 
-        private static List<RestaurantCategory> GetRestaurantCategoryTestData()
+        private static List<Category> GetRestaurantCategoryTestData()
         {
             List<Restaurant> restaurants = new List<Restaurant>();
             restaurants.Add(new Restaurant() { Id = 1, Name = "R1" });
@@ -100,11 +94,11 @@ namespace Tischreservierung.Tests.RestaurantTest.Controller
             restaurants.Add(new Restaurant() { Id = 3, Name = "R3" });
 
 
-            List<RestaurantCategory> restaurantCategories = new List<RestaurantCategory>();
-            restaurantCategories.Add(new RestaurantCategory() { Name = "Pizza", Restaurants = restaurants });
-            restaurantCategories.Add(new RestaurantCategory() { Name = "Pommes", Restaurants = restaurants });
+            List<Category> restaurantCategories = new List<Category>();
+            restaurantCategories.Add(new Category() { Name = "Pizza", Restaurants = restaurants });
+            restaurantCategories.Add(new Category() { Name = "Pommes", Restaurants = restaurants });
             restaurants.Add(new Restaurant() { Id = 4, Name = "R4" });
-            restaurantCategories.Add(new RestaurantCategory() { Name = "Ita", Restaurants = restaurants });
+            restaurantCategories.Add(new Category() { Name = "Ita", Restaurants = restaurants });
             return restaurantCategories;
         }
     }
