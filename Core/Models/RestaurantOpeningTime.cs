@@ -3,10 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Core.Models
 {
-    public class RestaurantOpeningTime
+    public class RestaurantOpeningTime : EntityObject
     {
-        public int Id { get; set; }
-       
         //Montag: 0, Sontag: 6
         public int Day { get; set; }
         [DataType(DataType.Time)]

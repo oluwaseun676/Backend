@@ -3,11 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Core.Models
 {
-    public class ZipCode
+    public class ZipCode : EntityObject
     { 
-        [Key]
-        public int Id { get; set; }
-
         [Required]
         public string ZipCodeNr { get; set; } = string.Empty;
 

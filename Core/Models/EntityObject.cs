@@ -7,10 +7,12 @@ using System.Threading.Tasks;
 
 namespace Core.Models
 {
-    public class Category : EntityObject
+    public class EntityObject
     {
-        public string Name { get; set; } = string.Empty;
+        [Key]
+        public int Id { get; set; }
 
-        public List<Restaurant> Restaurants { get; set; } = new List<Restaurant>();
+        [Timestamp]
+        public byte[]? RowVersion { get; set; }
     }
 }
