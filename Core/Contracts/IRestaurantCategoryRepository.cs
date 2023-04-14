@@ -8,23 +8,23 @@ namespace Core.Contracts
         /// Gets all Categories with restaurant
         /// </summary>
         /// <returns></returns>
-        Task<IEnumerable<RestaurantCategory>> GetRestaurantCategories();
+        Task<IEnumerable<Category>> GetRestaurantCategories();
         /// <summary>
         /// Get one category with a list of all restaurants with the category
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<RestaurantCategory?> GetRestaurantCategory(string id);
+        Task<Category?> GetRestaurantCategory(string id);
         /// <summary>
         /// Insert a new restaurantCategory
         /// </summary>
         /// <param name="restaurantCategory"></param>
-        void InsertRestaurantCategory(RestaurantCategory restaurantCategory);
+        void InsertRestaurantCategory(Category restaurantCategory);
         /// <summary>
         /// Delete one restaurantCategory
         /// </summary>
         /// <param name="restaurantCategory"></param>
-        void DeleteRestaurantCategory(RestaurantCategory restaurantCategory);
+        void DeleteRestaurantCategory(Category restaurantCategory);
         Task Save();
     }
 }
