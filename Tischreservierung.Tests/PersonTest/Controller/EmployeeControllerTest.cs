@@ -6,10 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Tischreservierung.Controllers.Person;
-using Persistence.Data.Person;
 using Core.Models;
-using Core.Models.Person;
 using Core.Contracts;
+using Core.Models.User;
 
 namespace Tischreservierung.Tests.Person.Controller
 {

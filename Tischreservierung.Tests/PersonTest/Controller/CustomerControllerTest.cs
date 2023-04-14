@@ -1,17 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Tischreservierung.Controllers;
 using Tischreservierung.Controllers.Person;
-using Persistence.Data;
-using Persistence.Data.Person;
 using Core.Contracts;
-using Core.Models.Person;
-using Xunit.Sdk;
+using Core.Models.User;
 
 namespace Tischreservierung.Tests.Person.Controller
 {
