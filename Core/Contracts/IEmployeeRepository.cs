@@ -1,4 +1,4 @@
-﻿using Core.Models.Person;
+﻿using Core.Models.User;
 
 namespace Core.Contracts
 {

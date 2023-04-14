@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Security.Policy;
-using Core.Models.Person;
+using Core.Models.User;
 using Core.Models;
 
 namespace Persistence.Data
@@ -13,6 +13,7 @@ namespace Persistence.Data
 
         }
 
+        public DbSet<Person> Persons => Set<Person>();
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ZipCode>().HasData(
