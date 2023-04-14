@@ -3,9 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Core.Models
 {
-    public class Restaurant
+    public class Restaurant : EntityObject
     {
-        public int Id { get; set; }
         [Required]
         public string Name { get; set; } = string.Empty;
         [ForeignKey(nameof(ZipCode))]

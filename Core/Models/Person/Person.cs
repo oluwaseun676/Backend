@@ -4,11 +4,8 @@ using System.ComponentModel.DataAnnotations;
 namespace Core.Models.Person
 {
     [Index(nameof(EMail), IsUnique = true)]
-    public class Person
+    public class Person : EntityObject
     {
-        [Key]
-        public int Id { get; set; }
-
         public string Name { get; set; } = string.Empty;
         public string FamilyName { get; set; } = string.Empty;
         [Required]

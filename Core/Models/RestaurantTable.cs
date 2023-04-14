@@ -3,9 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Core.Models
 {
-    public class RestaurantTable
+    public class RestaurantTable : EntityObject
     {
-        public int Id { get; set; }
         [Range(1, int.MaxValue)]
         public int SeatPlaces { get; set; }
         [ForeignKey(nameof(Restaurant))]
