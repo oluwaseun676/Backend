@@ -24,16 +24,20 @@ namespace Persistence.Data.RestaurantRepo
         {
             return await _context.Restaurants.FindAsync(id);
         }
-        public async Task<Restaurant> InsertRestaurantAsync(DTO_RestaurantPost restaurant)
+        public async Task<Restaurant?> InsertRestaurantAsync(DTO_RestaurantPost restaurant)
         {
+            if (_context.Persons.Count(p => p.EMail == restaurant.Employee!.EMail) != 0)
+                return null;
+
             Restaurant res = new Restaurant()
             {
                 Name = restaurant.Name,
                 Address = restaurant.Address,
                 StreetNr = restaurant.StreetNr,
-                ZipCodeId = restaurant.ZipCode!.Id,
-                Categories = _context.Categories.Where(c => restaurant.Categories!.Contains(c)).ToList()
+                ZipCodeId = restaurant.ZipCode!.Id
             };
+            if (restaurant.Categories != null)
+                res.Categories = _context.Categories.Where(c => restaurant.Categories!.Contains(c)).ToList();
 
             Employee emp = restaurant.Employee!;
             emp.Restaurant = res;
@@ -49,7 +53,7 @@ namespace Persistence.Data.RestaurantRepo
 
             }).ToArray();
 
-            await _context.Restaurants.AddAsync(res);
+            _context.Restaurants.Add(res);
             await _context.RestaurantOpeningTimes.AddRangeAsync(openings);
             await _context.Employees.AddAsync(emp);
             return res;

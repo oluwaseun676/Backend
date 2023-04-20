@@ -47,9 +47,11 @@ namespace Tischreservierung.Controllers
         [HttpPost]
         public async Task<ActionResult<Restaurant>> PostRestaurant(DTO_RestaurantPost restaurant)
         {
-            Restaurant res = await _repository.InsertRestaurantAsync(restaurant);
+            Restaurant? res = await _repository.InsertRestaurantAsync(restaurant);
+            if (res == null)
+                return BadRequest();
             await _repository.Save();
-            return Ok(res);
+            return Ok(res.Id);
         }
 
         [HttpDelete("{id}")]
