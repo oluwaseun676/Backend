@@ -340,7 +340,6 @@ namespace Persistence.Migrations
                         .IsRequired();
                 });
 
-
             modelBuilder.Entity("Core.Models.Reservation", b =>
                 {
                     b.HasOne("Core.Models.User.Customer", "Customer")
