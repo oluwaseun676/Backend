@@ -31,7 +31,12 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerUI(c =>
+{
+    string? basePath = Environment.GetEnvironmentVariable("ASPNETCORE_APPL_PATH");
+    if (basePath == null) basePath = "/";
+    c.SwaggerEndpoint($"{basePath}swagger/v1/swagger.json", "WebAPI");
+});
 
 
 app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
