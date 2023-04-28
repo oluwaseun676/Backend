@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: online-reservation-backend
+  namespace: student-s-raaber
+spec:
+  selector:
+    matchLabels:
+      app: online-reservation
+  template:
+    metadata:
+      labels:
+        app: online-reservation
+        tier: backend
+        track: stable
+    spec:
+      containers:
+      - name: online-reservation-backend
+        image: ghcr.io/tischreservierung/backend:latest
+        ports:
+        - containerPort: 80
+      imagePullSecrets:
+      - name: ghcr-login-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: online-reservation-backend-svc
+  namespace: student-s-raaber
+spec:
+  selector:
+    app: online-reservation
+    tier: backend
+  ports:
+  - protocol: TCP
+    port: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: online-reservation-backend-ing
+  namespace: student-s-raaber
+  labels:
+    name: online-reservation-backend
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+  - host: student.cloud.htl-leonding.ac.at
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/s.raaber/onlinereservation-backend/(.*)$"
+        backend:
+          service:
+            name: online-reservation-backend-svc
+            port: 
+              number: 80

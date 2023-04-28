@@ -29,15 +29,20 @@ builder.Services.AddCors();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-app.UseSwagger();
-app.UseSwaggerUI(c =>
+using (var scope = app.Services.CreateScope())
 {
-    string? basePath = Environment.GetEnvironmentVariable("ASPNETCORE_APPL_PATH");
-    if (basePath == null) basePath = "/";
-    c.SwaggerEndpoint($"{basePath}swagger/v1/swagger.json", "WebAPI");
-});
+    var services = scope.ServiceProvider;
 
+    var context = services.GetRequiredService<OnlineReservationContext>();
+    context.Database.Migrate();
+}
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
