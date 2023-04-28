@@ -38,13 +38,11 @@ using (var scope = app.Services.CreateScope())
 }
 
 // Configure the HTTP request pipeline.
-app.UseSwagger();
-app.UseSwaggerUI(c =>
+if (app.Environment.IsDevelopment())
 {
-    string? basePath = Environment.GetEnvironmentVariable("ASPNETCORE_APPL_PATH");
-    if (basePath == null) basePath = "/";
-    c.SwaggerEndpoint($"{basePath}swagger/v1/swagger.json", "WebAPI");
-});
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 
 app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
