@@ -73,5 +73,22 @@ namespace Persistence.Data.RestaurantRepo
         {
             await _context.SaveChangesAsync();
         }
+
+        public async Task<RestaurantViewDto?> GetRestaurantForViewById(int id)
+        {
+            return await _context.Restaurants.Where(x => x.Id == id).Select(x => new RestaurantViewDto()
+            {
+                Id = x.Id,
+                StreetNr = x.StreetNr,
+                Address = x.Address,
+                ZipCode = x.ZipCode,
+                Openings = _context.RestaurantOpeningTimes.Where(y => y.RestaurantId == x.Id)
+                    .Select(o => new DTO_OpeningTime() { Day = o.Day, 
+                        OpenFrom = o.OpeningTime.Hour + ":" + o.OpeningTime.Minute, 
+                        OpenTo = o.ClosingTime.Hour + ":" + o.ClosingTime.Minute}).ToArray(),
+                Name = x.Name,
+                Categories = x.Categories.ToArray(),
+            }).SingleOrDefaultAsync();
+        }
     }
 }

@@ -12,5 +12,7 @@ namespace Core.Contracts
         void DeleteRestaurant(Restaurant restaurant);
         void UpdateRestaurant(Restaurant restaurant);
         Task Save();
+
+        Task<RestaurantViewDto?> GetRestaurantForViewById(int id);
     }
 }
