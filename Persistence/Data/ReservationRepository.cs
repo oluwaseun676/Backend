@@ -9,43 +9,20 @@ using System.Threading.Tasks;
 
 namespace Persistence.Data
 {
-    public class ReservationRepository : IReservationRepository
+    public class ReservationRepository : GenericRepository<Reservation>, IReservationRepository
     {
-        private readonly OnlineReservationContext _context;
-
-        public ReservationRepository(OnlineReservationContext context)
+        public ReservationRepository(OnlineReservationContext context) : base(context)
         {
-            _context = context;
         }
 
-        public void DeleteReservation(Reservation reservation)
+        public async Task<IEnumerable<Reservation>> GetByCustomer(int customerId)
         {
-            _context.Reservations.Remove(reservation);
+            return await _dbSet.Where(r => r.CustomerId == customerId).ToListAsync();
         }
 
-        public async Task<Reservation?> GetReservationById(int id)
+        public async Task<IEnumerable<Reservation>> GetByRestaurant(int restaurantId)
         {
-            return await _context.Reservations.FindAsync(id);
-        }
-
-        public async Task<IEnumerable<Reservation>> GetReservationsByCustomer(int customerId)
-        {
-            return await _context.Reservations.Where(r => r.CustomerId == customerId).ToListAsync();
-        }
-
-        public async Task<IEnumerable<Reservation>> GetReservationsByRestaurant(int restaurantId)
-        {
-            return await _context.Reservations.Where(r => r.RestaurantId == restaurantId).ToListAsync();
-        }
-
-        public void InsertReservation(Reservation reservation)
-        {
-            _context.Reservations.Add(reservation);
-        }
-
-        public async Task Save()
-        {
-            await _context.SaveChangesAsync();
+            return await _dbSet.Where(r => r.RestaurantId == restaurantId).ToListAsync();
         }
     }
 }

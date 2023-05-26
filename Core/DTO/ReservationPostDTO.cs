@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Core.DTO
 {
-    public class ReservationPostDTO
+    public class ReservationPostDto
     {
         public DateTime ReservationDay { get; set; }
         public DateTime StartTime { get; set; }

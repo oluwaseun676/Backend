@@ -16,17 +16,16 @@ namespace Tischreservierung.Controllers
     [ApiController]
     public class RestaurantsController : ControllerBase
     {
-        private readonly IRestaurantRepository _repository;
-
-        public RestaurantsController(IRestaurantRepository repository)
+        private readonly IUnitOfWork _unitOfWork;
+        public RestaurantsController(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Restaurant>>> GetRestaurants()
         {
-            var restaurants = await _repository.GetRestaurants();
+            var restaurants = await _unitOfWork.Restaurants.GetAll();
             
             return Ok(restaurants);
         }
@@ -34,7 +33,7 @@ namespace Tischreservierung.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Restaurant>> GetRestaurant(int id)
         {
-            var restaurant = await _repository.GetRestaurantById(id);
+            var restaurant = await _unitOfWork.Restaurants.GetById(id);
 
             if (restaurant == null)
             {
@@ -45,26 +44,26 @@ namespace Tischreservierung.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Restaurant>> PostRestaurant(DTO_RestaurantPost restaurant)
+        public async Task<ActionResult<Restaurant>> PostRestaurant(RestaurantPostDto restaurant)
         {
-            Restaurant? res = await _repository.InsertRestaurantAsync(restaurant);
+            Restaurant? res = await _unitOfWork.Restaurants.InsertRestaurantAsync(restaurant);
             if (res == null)
                 return BadRequest();
-            await _repository.Save();
+            await _unitOfWork.SaveChangesAsync();
             return Ok(res.Id);
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteRestaurant(int id)
         {
-            var restaurant = await _repository.GetRestaurantById(id);
+            var restaurant = await _unitOfWork.Restaurants.GetById(id);
             if (restaurant == null)
             {
                 return NotFound();
             }
 
-            _repository.DeleteRestaurant(restaurant);
-            await _repository.Save();
+            _unitOfWork.Restaurants.Delete(restaurant);
+            await _unitOfWork.SaveChangesAsync();
 
             return NoContent();
         }
@@ -72,7 +71,7 @@ namespace Tischreservierung.Controllers
         [HttpGet("restaurantview/{id}")]
         public async Task<ActionResult<RestaurantViewDto?>> GetRestaurantForView(int id)
         {
-            return Ok(await _repository.GetRestaurantForViewById(id));
+            return Ok(await _unitOfWork.Restaurants.GetRestaurantForViewById(id));
         }
     }
 }

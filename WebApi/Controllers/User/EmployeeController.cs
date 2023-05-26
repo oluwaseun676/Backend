@@ -9,31 +9,30 @@ namespace Tischreservierung.Controllers.Person
     [ApiController]
     public class EmployeeController : ControllerBase
     {
-        private readonly IEmployeeRepository _employeeRepository;
-
-        public EmployeeController(IEmployeeRepository employeeRepository)
+        private readonly IUnitOfWork _unitOfWork;
+        public EmployeeController(IUnitOfWork unitOfWork)
         {
-            _employeeRepository = employeeRepository;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Customer>> GetEmployeeById(int id)
         {
-            return Ok(await _employeeRepository.GetEmployeeById(id));
+            return Ok(await _unitOfWork.Employees.GetById(id));
         }
 
 
         [HttpGet("{restaurantId}")]
         public async Task<ActionResult<List<Customer>>> GetEmployeeByRestaurantId(int id)
         {
-            return Ok(await _employeeRepository.GetByRestaurantId(id));
+            return Ok(await _unitOfWork.Employees.GetByRestaurant(id));
         }
 
         [HttpPost]
         public async Task<ActionResult> PostEmployee(Employee data)
         {
-            _employeeRepository.SetEmployee(data);
-            await _employeeRepository.Save();
+            _unitOfWork.Employees.Insert(data);
+            await _unitOfWork.SaveChangesAsync();
 
             return CreatedAtAction("GetCustomerById", new { id = data.Id }, data);
         }
@@ -41,14 +40,14 @@ namespace Tischreservierung.Controllers.Person
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteCustomer(int id)
         {
-            var employee = await _employeeRepository.GetEmployeeById(id);
+            var employee = await _unitOfWork.Employees.GetById(id);
             if (employee == null)
             {
                 return NotFound();
             }
 
-            _employeeRepository.DeleteEmployee(employee);
-            await _employeeRepository.Save();
+            _unitOfWork.Employees.Delete(employee);
+            await _unitOfWork.SaveChangesAsync();
             return NoContent();
         }
     }

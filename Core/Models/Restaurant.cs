@@ -12,7 +12,7 @@ namespace Core.Models
         [ForeignKey(nameof(ZipCode))]
         public int ZipCodeId { get; set; }
         [JsonIgnore]
-        public ZipCode? ZipCode { get; set; } 
+        public ZipCode? ZipCode { get; set; }
      
 
         public string Address { get; set; } = string.Empty;

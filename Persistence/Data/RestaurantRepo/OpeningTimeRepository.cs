@@ -4,54 +4,26 @@ using Core.Contracts;
 
 namespace Persistence.Data.RestaurantRepo
 {
-    public class OpeningTimeRepository : IOpeningTimeRepository
+    public class OpeningTimeRepository : GenericRepository<RestaurantOpeningTime>, IOpeningTimeRepository
     {
-        private  readonly OnlineReservationContext _context;
-
-        public OpeningTimeRepository(OnlineReservationContext context)
+        public OpeningTimeRepository(OnlineReservationContext context) : base(context)
         {
-            _context = context;
+            
         }
 
-        public void DeleteOpeningTime(RestaurantOpeningTime openingTime)
+        public async Task<IEnumerable<RestaurantOpeningTime>> GetByDay(int day)
         {
-            _context.RestaurantOpeningTimes.Remove(openingTime);
+            return await _dbSet.Where(oT => oT.Day == day).ToListAsync();
         }
 
-        public async Task<RestaurantOpeningTime?> GetOpeningTime(int id)
+        public async Task<IEnumerable<RestaurantOpeningTime>> GetByDayAndRestaurant(int id, int day)
         {
-            return await _context.RestaurantOpeningTimes.FindAsync(id);
+            return await _dbSet.Where(oT => oT.Day == day && oT.RestaurantId == id).ToListAsync();
         }
 
-        public async Task<IEnumerable<RestaurantOpeningTime>> GetOpeningTimesByDay(int day)
+        public async Task<IEnumerable<RestaurantOpeningTime>> GetByRestaurant(int id)
         {
-            return await _context.RestaurantOpeningTimes.Where(oT => oT.Day == day).ToListAsync();
-        }
-
-        public async Task<IEnumerable<RestaurantOpeningTime>> GetOpeningTimesByDayAndRestaurant(int id, int day)
-        {
-            return await _context.RestaurantOpeningTimes.Where(oT => oT.Day == day && oT.RestaurantId == id).ToListAsync();
-        }
-
-
-        public async Task<IEnumerable<RestaurantOpeningTime>> GetOpeningTimesByRestaurant(int id)
-        {
-            return await _context.RestaurantOpeningTimes.Where(oT => oT.RestaurantId == id).ToListAsync();
-        }
-
-        public void InsertRestaurantOpeningTime(RestaurantOpeningTime openingTime)
-        {
-            _context.RestaurantOpeningTimes.Add(openingTime);
-        }
-
-        public async Task Save()
-        {
-            await _context.SaveChangesAsync();
-        }
-
-        public void UpdateOpeningTime(RestaurantOpeningTime openingTime)
-        {
-            _context.RestaurantOpeningTimes.Update(openingTime);
+            return await _dbSet.Where(oT => oT.RestaurantId == id).ToListAsync();
         }
     }
 }

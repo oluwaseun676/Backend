@@ -6,27 +6,16 @@ using Core.Models.User;
 
 namespace Persistence.Data.RestaurantRepo
 {
-    public class RestaurantRepository : IRestaurantRepository
+    public class RestaurantRepository : GenericRepository<Restaurant>, IRestaurantRepository
     {
-        private  readonly OnlineReservationContext _context;
-
-        public RestaurantRepository(OnlineReservationContext context)
+        public RestaurantRepository(OnlineReservationContext context) : base(context)
         {
-            _context = context;
+            
         }
 
-        public async Task<IEnumerable<Restaurant>> GetRestaurants()
+        public async Task<Restaurant?> InsertRestaurantAsync(RestaurantPostDto restaurant)
         {
-            return await _context.Restaurants.ToListAsync();
-        }
-
-        public async Task<Restaurant?> GetRestaurantById(int id)
-        {
-            return await _context.Restaurants.FindAsync(id);
-        }
-        public async Task<Restaurant?> InsertRestaurantAsync(DTO_RestaurantPost restaurant)
-        {
-            if (_context.Persons.Count(p => p.EMail == restaurant.Employee!.EMail) != 0)
+            if (_dbContext.Persons.Count(p => p.EMail == restaurant.Employee!.EMail) != 0)
                 return null;
 
             Restaurant res = new Restaurant()
@@ -37,7 +26,7 @@ namespace Persistence.Data.RestaurantRepo
                 ZipCodeId = restaurant.ZipCode!.Id
             };
             if (restaurant.Categories != null)
-                res.Categories = _context.Categories.Where(c => restaurant.Categories!.Contains(c)).ToList();
+                res.Categories = _dbContext.Categories.Where(c => restaurant.Categories!.Contains(c)).ToList();
 
             Employee emp = restaurant.Employee!;
             emp.Restaurant = res;
@@ -53,37 +42,21 @@ namespace Persistence.Data.RestaurantRepo
 
             }).ToArray();
 
-            _context.Restaurants.Add(res);
-            await _context.RestaurantOpeningTimes.AddRangeAsync(openings);
-            await _context.Employees.AddAsync(emp);
+            _dbContext.Restaurants.Add(res);
+            await _dbContext.RestaurantOpeningTimes.AddRangeAsync(openings);
+            await _dbContext.Employees.AddAsync(emp);
             return res;
         }
-
-        public void DeleteRestaurant(Restaurant restaurant)
-        {
-            _context.Restaurants.Remove(restaurant);
-        }
-
-        public void UpdateRestaurant(Restaurant restaurant)
-        {
-            _context.Restaurants.Update(restaurant);
-        }
-
-        public async Task Save()
-        {
-            await _context.SaveChangesAsync();
-        }
-
         public async Task<RestaurantViewDto?> GetRestaurantForViewById(int id)
         {
-            return await _context.Restaurants.Where(x => x.Id == id).Select(x => new RestaurantViewDto()
+            return await _dbContext.Restaurants.Where(x => x.Id == id).Select(x => new RestaurantViewDto()
             {
                 Id = x.Id,
                 StreetNr = x.StreetNr,
                 Address = x.Address,
                 ZipCode = x.ZipCode,
-                Openings = _context.RestaurantOpeningTimes.Where(y => y.RestaurantId == x.Id)
-                    .Select(o => new DTO_OpeningTime() { Day = o.Day, 
+                Openings = _dbContext.RestaurantOpeningTimes.Where(y => y.RestaurantId == x.Id)
+                    .Select(o => new OpeningTimeDto() { Day = o.Day, 
                         OpenFrom = o.OpeningTime.Hour + ":" + o.OpeningTime.Minute, 
                         OpenTo = o.ClosingTime.Hour + ":" + o.ClosingTime.Minute}).ToArray(),
                 Name = x.Name,

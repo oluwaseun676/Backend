@@ -2,17 +2,10 @@
 
 namespace Core.Contracts
 {
-    public interface IOpeningTimeRepository
+    public interface IOpeningTimeRepository : IGenericRepository<RestaurantOpeningTime>
     {
-        Task<IEnumerable<RestaurantOpeningTime>> GetOpeningTimesByRestaurant(int id);
-        Task<IEnumerable<RestaurantOpeningTime>> GetOpeningTimesByDay(int day);
-        Task<IEnumerable<RestaurantOpeningTime>> GetOpeningTimesByDayAndRestaurant(int id, int day);
-
-        Task<RestaurantOpeningTime?> GetOpeningTime(int id);
-
-        void DeleteOpeningTime(RestaurantOpeningTime openingTime);
-        void UpdateOpeningTime(RestaurantOpeningTime openingTime);
-        void InsertRestaurantOpeningTime(RestaurantOpeningTime openingTime);
-        Task Save();
+        Task<IEnumerable<RestaurantOpeningTime>> GetByRestaurant(int id);
+        Task<IEnumerable<RestaurantOpeningTime>> GetByDay(int day);
+        Task<IEnumerable<RestaurantOpeningTime>> GetByDayAndRestaurant(int id, int day);
     }
 }

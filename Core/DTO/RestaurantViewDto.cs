@@ -16,6 +16,6 @@ namespace Core.DTO
         public string StreetNr { get; set; } = string.Empty;
 
         public Category[]? Categories { get; set; }
-        public DTO_OpeningTime[]? Openings { get; set; }
+        public OpeningTimeDto[]? Openings { get; set; }
     }
 }

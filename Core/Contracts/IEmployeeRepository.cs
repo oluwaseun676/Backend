@@ -2,14 +2,8 @@
 
 namespace Core.Contracts
 {
-    public interface IEmployeeRepository
+    public interface IEmployeeRepository : IGenericRepository<Employee>
     {
-        void SetEmployee(Employee employee);
-        void DeleteEmployee(Employee employee);
-
-        Task<Employee?> GetEmployeeById(int personId);
-        Task<List<Employee>> GetByRestaurantId(int restaurantId);
-
-        Task Save();
+        Task<List<Employee>> GetByRestaurant(int restaurantId);
     }
 }

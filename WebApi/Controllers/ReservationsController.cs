@@ -9,17 +9,16 @@ namespace WebApi.Controllers
     [ApiController]
     public class ReservationsController : ControllerBase
     {
-        private readonly IReservationRepository _reservationRepository;
-
-        public ReservationsController(IReservationRepository repository)
+        private readonly IUnitOfWork _unitOfWork;
+        public ReservationsController(IUnitOfWork unitOfWork)
         {
-            _reservationRepository = repository;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Reservation>> GetReservation(int id)
         {
-            var reservation = await _reservationRepository.GetReservationById(id);
+            var reservation = await _unitOfWork.Reservations.GetById(id);
 
             if (reservation == null)
             {
@@ -31,19 +30,19 @@ namespace WebApi.Controllers
 
 
         [HttpGet("byCustomer/{customerId}")]
-        public async Task<ActionResult<IEnumerable<Reservation>>> GetReservationByCustomer(int customerId)
+        public async Task<ActionResult<IEnumerable<Reservation>>> GetReservationsByCustomer(int customerId)
         {
-            return Ok(await _reservationRepository.GetReservationsByCustomer(customerId));
+            return Ok(await _unitOfWork.Reservations.GetByCustomer(customerId));
         }
 
         [HttpGet("byRestaurant/{restaurantId}")]
-        public async Task<ActionResult<IEnumerable<Reservation>>> GetReservationByRestaurant(int restaurantId)
+        public async Task<ActionResult<IEnumerable<Reservation>>> GetReservationsByRestaurant(int restaurantId)
         {
-            return Ok(await _reservationRepository.GetReservationsByRestaurant(restaurantId));
+            return Ok(await _unitOfWork.Reservations.GetByRestaurant(restaurantId));
         }
 
         [HttpPost]
-        public async Task<ActionResult<Reservation>> PostReservation(ReservationPostDTO reservation)
+        public async Task<ActionResult<Reservation>> PostReservation(ReservationPostDto reservation)
         {
             Reservation reservationToInsert = new Reservation()
             {
@@ -55,8 +54,8 @@ namespace WebApi.Controllers
                 RestaurantTableId = reservation.RestaurantTableId
             };
 
-            _reservationRepository.InsertReservation(reservationToInsert);
-            await _reservationRepository.Save();
+            _unitOfWork.Reservations.Insert(reservationToInsert);
+            await _unitOfWork.SaveChangesAsync();
 
             return CreatedAtAction("GetReservation", new { id = reservationToInsert.Id }, reservationToInsert);
         }
@@ -64,14 +63,14 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteReservation(int id)
         {
-            var reservation = await _reservationRepository.GetReservationById(id);
+            var reservation = await _unitOfWork.Reservations.GetById(id);
             if (reservation == null)
             {
                 return NotFound();
             }
 
-            _reservationRepository.DeleteReservation(reservation);
-            await _reservationRepository.Save();
+            _unitOfWork.Reservations.Delete(reservation);
+            await _unitOfWork.SaveChangesAsync();
 
             return NoContent();
         }

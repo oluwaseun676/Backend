@@ -9,17 +9,16 @@ namespace WebApi.Controllers.User
     [ApiController]
     public class PersonController : ControllerBase
     {
-        private readonly IPersonRepository _personRepository;
-
-        public PersonController(IPersonRepository personRepository)
+        private readonly IUnitOfWork _unitOfWork;
+        public PersonController(IUnitOfWork unitOfWork)
         {
-            _personRepository = personRepository;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpGet("check")]
         public async Task<ActionResult<Person>> CheckPassword(string email, string password)
         {
-            return Ok(await _personRepository.CheckPassword(email, password));
+            return Ok(await _unitOfWork.Persons.CheckPassword(email, password));
         }
     }
 }
