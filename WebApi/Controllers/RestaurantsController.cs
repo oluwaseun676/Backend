@@ -67,5 +67,11 @@ namespace Tischreservierung.Controllers
 
             return NoContent();
         }
+
+        [HttpGet("restaurantview/{id}")]
+        public async Task<ActionResult<RestaurantViewDto?>> GetRestaurantForView(int id)
+        {
+            return Ok(await _unitOfWork.Restaurants.GetRestaurantForViewById(id));
+        }
     }
 }
