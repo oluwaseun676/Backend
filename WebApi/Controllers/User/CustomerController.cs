@@ -11,48 +11,57 @@ namespace Tischreservierung.Controllers.Person
     [ApiController]
     public class CustomerController : ControllerBase
     {
-        private readonly ICustomerRepository _customerRepository;
-
-        public CustomerController(ICustomerRepository customerRepository)
+        private readonly IUnitOfWork _unitOfWork;
+        public CustomerController(IUnitOfWork unitOfWork)
         {
-            _customerRepository = customerRepository;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers()
         {
-            return Ok(await _customerRepository.GetCustomers());
+            return Ok(await _unitOfWork.Customers.GetAll());
         }
 
         [HttpGet("{Mail}")]
         public async Task<ActionResult<Customer>> GetCustomerByMail(string mail)
         {
-            return Ok(await _customerRepository.GetCustomerByEMail(mail));
+            return Ok(await _unitOfWork.Customers.GetByEMail(mail));
         }
 
         [HttpDelete("{Mail}")]
         public async Task<ActionResult> DeleteCustomer(string mail)
         {
-            var customer = await _customerRepository.GetCustomerByEMail(mail);
+            var customer = await _unitOfWork.Customers.GetByEMail(mail);
             if (customer == null)
             {
                 return NotFound();
             }
 
-            _customerRepository.DeleteCustomer(customer);
-            await _customerRepository.Save();
+            _unitOfWork.Customers.Delete(customer);
+            await _unitOfWork.SaveChangesAsync();
             return NoContent();
         }
+
+        //[HttpPost()]
+        //public async Task<ActionResult> PostCustomer(Customer data)
+        //{
+        //    bool check = _unitOfWork.Customers.SetCustomer(data);
+
+        //    if (!check)
+        //        return UnprocessableEntity("GetCustomerByMail");
+
+        //    await _unitOfWork.SaveChangesAsync();
+
+        //    return CreatedAtAction("GetCustomerByMail", new { mail = data.EMail }, data);
+        //}
 
         [HttpPost()]
         public async Task<ActionResult> PostCustomer(Customer data)
         {
-            bool check = _customerRepository.SetCustomer(data);
+            _unitOfWork.Customers.Insert(data);
 
-            if (!check)
-                return UnprocessableEntity("GetCustomerByMail");
-
-            await _customerRepository.Save();
+            await _unitOfWork.SaveChangesAsync();
 
             return CreatedAtAction("GetCustomerByMail", new { mail = data.EMail }, data);
         }

@@ -2,14 +2,9 @@
 
 namespace Core.Contracts
 {
-    public interface ICustomerRepository
+    public interface ICustomerRepository : IGenericRepository<Customer>
     {
-        Task<IEnumerable<Customer>> GetCustomers();
-        Task<Customer?> GetCustomerByEMail(string mail);
+        Task<Customer?> GetByEMail(string mail);
 
-        bool SetCustomer(Customer customer);
-        void DeleteCustomer(Customer customer);
-
-        Task Save();
     }
 }

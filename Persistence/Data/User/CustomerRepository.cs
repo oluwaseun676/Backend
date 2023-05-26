@@ -1,47 +1,27 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Core.Models.User;
+﻿using Core.Models.User;
 using Core.Contracts;
-using System.Xml.Linq;
 
 namespace Persistence.Data.User
 {
-    public class CustomerRepository : ICustomerRepository
+    public class CustomerRepository : GenericRepository<Customer>, ICustomerRepository
     {
-        private readonly OnlineReservationContext _context;
-
-        public CustomerRepository(OnlineReservationContext context)
+        public CustomerRepository(OnlineReservationContext context) : base(context)
         {
-            _context = context;
         }
 
-        public void DeleteCustomer(Customer customer)
+        public async Task<Customer?> GetByEMail(string mail)
         {
-            _context.Customers.Remove(customer);
+            return await _dbSet.FindAsync(mail);
         }
 
-        public async Task<Customer?> GetCustomerByEMail(string mail)
-        {
-            return await _context.Customers.FindAsync(mail);
-        }
+        //public bool SetCustomer(Customer customer)
+        //{
+        //    if (_context.Customers.Any(c => c.EMail.ToLower() == customer.EMail.ToLower()))
+        //        return false;
 
-        public async Task<IEnumerable<Customer>> GetCustomers()
-        {
-            return await _context.Customers.ToListAsync();
-        }
+        //    _context.Customers.Add(customer);
 
-        public async Task Save()
-        {
-            await _context.SaveChangesAsync();
-        }
-
-        public bool SetCustomer(Customer customer)
-        {
-            if (_context.Customers.Any(c => c.EMail.ToLower() == customer.EMail.ToLower()))
-                return false;
-
-            _context.Customers.Add(customer);
-
-            return true;
-        }
+        //    return true;
+        //}
     }
 }

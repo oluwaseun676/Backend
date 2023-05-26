@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Core.DTO
 {
-    public class DTO_RestaurantPost
+    public class RestaurantPostDto
     {
         public int Id { get; set; }
         public string Name { get; set; } = String.Empty;
@@ -17,7 +17,7 @@ namespace Core.DTO
         public string StreetNr { get; set; } = string.Empty;
 
         public Category[]? Categories { get; set; }
-        public DTO_OpeningTime[]? Openings { get; set; }
+        public OpeningTimeDto[]? Openings { get; set; }
 
         public Employee? Employee { get; set; }
     }

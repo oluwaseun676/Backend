@@ -15,23 +15,24 @@ namespace Tischreservierung.Controllers
     [ApiController]
     public class RestaurantCategoriesController : ControllerBase
     {
-        private readonly IRestaurantCategoryRepository _restaurantCategoryRepository;
-
-        public RestaurantCategoriesController(IRestaurantCategoryRepository repository)
+        private readonly IUnitOfWork _unitOfWork;
+        public RestaurantCategoriesController(IUnitOfWork unitOfWork)
         {
-            _restaurantCategoryRepository = repository;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Category>>> GetRestaurantCategories()
         {
-            return Ok(await _restaurantCategoryRepository.GetRestaurantCategories());
+            IEnumerable<Category> categories = await _unitOfWork.RestaurantCategories.GetAll();
+
+            return Ok(categories);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Category>> GetRestaurantCategory(string id)
+        public async Task<ActionResult<Category>> GetRestaurantCategory(int id)
         {
-            var restaurantCategory = await _restaurantCategoryRepository.GetRestaurantCategory(id);
+            var restaurantCategory = await _unitOfWork.RestaurantCategories.GetById(id);
 
             if (restaurantCategory == null)
             {
@@ -44,23 +45,23 @@ namespace Tischreservierung.Controllers
         [HttpPost]
         public async Task<ActionResult<Category>> PostRestaurantCategory(Category restaurantCategory)
         {
-            _restaurantCategoryRepository.InsertRestaurantCategory(restaurantCategory);
-            await _restaurantCategoryRepository.Save();
+            _unitOfWork.RestaurantCategories.Insert(restaurantCategory);
+            await _unitOfWork.SaveChangesAsync();
 
             return CreatedAtAction("GetRestaurantCategory", new { id = restaurantCategory.Id }, restaurantCategory);
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteRestaurantCategory(string id)
+        public async Task<IActionResult> DeleteRestaurantCategory(int id)
         {
-            var restaurantCategory = await _restaurantCategoryRepository.GetRestaurantCategory(id);
+            var restaurantCategory = await _unitOfWork.RestaurantCategories.GetById(id);
             if (restaurantCategory == null)
             {
                 return NotFound();
             }
 
-            _restaurantCategoryRepository.DeleteRestaurantCategory(restaurantCategory);
-            await _restaurantCategoryRepository.Save();
+            _unitOfWork.RestaurantCategories.Delete(restaurantCategory);
+            await _unitOfWork.SaveChangesAsync();
             return NoContent();
         }
     }

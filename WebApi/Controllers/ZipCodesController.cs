@@ -15,23 +15,24 @@ namespace Tischreservierung.Controllers
     [ApiController]
     public class ZipCodesController : ControllerBase
     {
-        private readonly IZipCodeRepository _repository;
-
-        public ZipCodesController(IZipCodeRepository repository)
+        private readonly IUnitOfWork _unitOfWork;
+        public ZipCodesController(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ZipCode>>> GetZipcodes()
+        public async Task<ActionResult<IEnumerable<ZipCode>>> GetZipCodes()
         {
-            return Ok(await _repository.GetZipCodes());
+            IEnumerable<ZipCode> zipCodes = await _unitOfWork.ZipCodes.GetAll();
+
+            return Ok(zipCodes);
         }
 
         [HttpGet("{zipcode}")]
         public async Task<ActionResult<IEnumerable<ZipCode>>> GetZipCodesByZipCode(string zipcode)
         {
-            var zipCode = await _repository.GetByZipCode(zipcode);
+            var zipCode = await _unitOfWork.ZipCodes.GetByZipCode(zipcode);
 
             if (zipCode == null)
             {
@@ -42,24 +43,24 @@ namespace Tischreservierung.Controllers
         }
 
         [HttpGet("byLocation")]
-        public async Task<ActionResult<IEnumerable<ZipCode>>> GetZipcodesByLocation(string location)
+        public async Task<ActionResult<IEnumerable<ZipCode>>> GetZipCodesByLocation(string location)
         {
-            return Ok( await _repository.GetByLocation(location));
+            return Ok( await _unitOfWork.ZipCodes.GetByLocation(location));
 
         }
 
         [HttpGet("byDistrict")]
-        public async Task<ActionResult<IEnumerable<ZipCode>>> GetZipcodesByDistrict(string district)
+        public async Task<ActionResult<IEnumerable<ZipCode>>> GetZipCodesByDistrict(string district)
         {
-            return Ok(await _repository.GetByDistrict(district));
+            return Ok(await _unitOfWork.ZipCodes.GetByDistrict(district));
 
         }
 
         [HttpGet("byZipCodeAndLocation")]
-        public async Task<ActionResult<IEnumerable<ZipCode>>> GetZipcodesByZipCodeAndLocation
+        public async Task<ActionResult<IEnumerable<ZipCode>>> GetZipCodesByZipCodeAndLocation
             (string zipZode, string location)
         {
-            return Ok(await _repository.GetByZipCodeAndLocation(zipZode,location));
+            return Ok(await _unitOfWork.ZipCodes.GetByZipCodeAndLocation(zipZode,location));
 
         }
 

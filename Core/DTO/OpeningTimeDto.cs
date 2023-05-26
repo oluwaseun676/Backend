@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Core.DTO
 {
-    public class DTO_OpeningTime
+    public class OpeningTimeDto
     {
         public int Day { get; set; }
         public string OpenFrom { get; set; } = string.Empty;

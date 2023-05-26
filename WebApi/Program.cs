@@ -11,15 +11,7 @@ builder.Services.AddDbContext<OnlineReservationContext>(options =>
 
 // Add services to the container.
 //Services.AddScopped
-builder.Services.AddScoped<IRestaurantRepository, RestaurantRepository>();
-builder.Services.AddScoped<IRestaurantTableRepository, RestaurantTableRepository>();
-builder.Services.AddScoped<IOpeningTimeRepository, OpeningTimeRepository>();
-builder.Services.AddScoped<IRestaurantCategoryRepository, RestaurantCategoryRepository>();
-builder.Services.AddScoped<IZipCodeRepository, ZipCodeRepository>();
-builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
-builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-builder.Services.AddScoped<IPersonRepository, PersonRepository>();
-builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

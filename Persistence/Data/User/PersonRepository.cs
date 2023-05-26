@@ -1,26 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Core.Contracts;
+﻿using Core.Contracts;
 using Core.Models.User;
 using Microsoft.EntityFrameworkCore;
 
 namespace Persistence.Data.User
 {
-    public class PersonRepository : IPersonRepository
+    public class PersonRepository : GenericRepository<Person>, IPersonRepository
     {
-        private readonly OnlineReservationContext _context;
-
-        public PersonRepository(OnlineReservationContext context)
+        public PersonRepository(OnlineReservationContext context) : base(context)
         {
-            _context = context;
         }
 
         public async Task<Person?> CheckPassword(string email, string password)
         {
-            return await _context.Persons.Where(p => p.EMail.ToLower() == email.ToLower() && password == p.Password).SingleOrDefaultAsync();
+            return await _dbSet.Where(p => p.EMail.ToLower() == email.ToLower() && password == p.Password).SingleOrDefaultAsync();
         }
     }
 }

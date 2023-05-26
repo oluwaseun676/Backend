@@ -8,99 +8,96 @@ using System.Threading.Tasks;
 using Tischreservierung.Controllers;
 using Core.Models;
 using Core.Contracts;
+using Microsoft.AspNetCore.Http;
 
 namespace Tischreservierung.Tests.RestaurantTest.Controller
 {
     public class ZipCodeControllerTest
     {
-
         [Fact]
-        public async Task GetAllZipCodes()
+        public async Task GetAllRestaurants()
         {
-            var zipCodeRepository = new Mock<IZipCodeRepository>();
-            zipCodeRepository.Setup(r => r.GetZipCodes()).ReturnsAsync(GetZipCodeTestData);
-            var restaurantController = new ZipCodesController(zipCodeRepository.Object);
+            var unitOfWork = new Mock<IUnitOfWork>();
+            unitOfWork.Setup(x => x.ZipCodes.GetAll()).ReturnsAsync(GetZipCodeTestData());
+            var controller = new ZipCodesController(unitOfWork.Object);
 
-            var actionResult = await restaurantController.GetZipcodes();
+            var actionResult = await controller.GetZipCodes();
+            var result = actionResult.Result as ObjectResult;
 
-            Assert.IsType<OkObjectResult>(actionResult.Result);
-            var result = actionResult.Result as OkObjectResult;
 
             Assert.NotNull(result);
-            Assert.Equal(200, result!.StatusCode);
-            Assert.Equal(4, ((List<ZipCode>)result.Value!).Count());
+            Assert.Equal(StatusCodes.Status200OK, result!.StatusCode);
+            Assert.Equal(4, (result.Value as IEnumerable<ZipCode>)!.Count());
 
-            zipCodeRepository.Verify(r => r.GetZipCodes());
-            zipCodeRepository.VerifyNoOtherCalls();
+            unitOfWork.Verify(x => x.ZipCodes.GetAll());
+            unitOfWork.VerifyNoOtherCalls();
         }
+
 
         [Fact]
         public async Task GetZipCodesByZipCodeNr()
         {
+            string zipCode = "4470";
             List<ZipCode> zipCodes = GetZipCodeTestData();
 
-            var zipCodeRepository = new Mock<IZipCodeRepository>();
-            zipCodeRepository.Setup(r => r.GetByZipCode("4470")).ReturnsAsync(new List<ZipCode>() { zipCodes[0] });
-            var zipCodeController = new ZipCodesController(zipCodeRepository.Object);
+            var unitOfWork = new Mock<IUnitOfWork>();
+            unitOfWork.Setup(x => x.ZipCodes.GetByZipCode(zipCode)).ReturnsAsync(new List<ZipCode>() { zipCodes[0] });
+            var controller = new ZipCodesController(unitOfWork.Object);
 
-            var actionResult = await zipCodeController.GetZipCodesByZipCode("4470");
-
-            Assert.IsType<OkObjectResult>(actionResult.Result);
-            var result = actionResult.Result as OkObjectResult;
+            var actionResult = await controller.GetZipCodesByZipCode(zipCode);
+            var result = actionResult.Result as ObjectResult;
 
             Assert.NotNull(result);
-            Assert.Equal(200, result!.StatusCode);
-            Assert.Single((List<ZipCode>)result.Value!);
+            Assert.Equal(StatusCodes.Status200OK, result!.StatusCode);
+            Assert.Single((result.Value as IEnumerable<ZipCode>)!);
 
-            zipCodeRepository.Verify(r => r.GetByZipCode(It.IsAny<string>()));
-            zipCodeRepository.VerifyNoOtherCalls();
+            unitOfWork.Verify(x => x.ZipCodes.GetByZipCode(It.IsAny<string>()));
+            unitOfWork.VerifyNoOtherCalls();
         }
 
 
         [Fact]
         public async Task GetZipCodesByDistrict()
         {
+            string district = "Linz-Land";
             List<ZipCode> zipCodes = GetZipCodeTestData();
 
-            var zipCodeRepository = new Mock<IZipCodeRepository>();
-            zipCodeRepository.Setup(r => r.GetByDistrict("Linz-Land")).ReturnsAsync(new List<ZipCode>() { zipCodes[0], zipCodes[3] });
-            var zipCodeController = new ZipCodesController(zipCodeRepository.Object);
+            var unitOfWork = new Mock<IUnitOfWork>();
+            unitOfWork.Setup(x => x.ZipCodes.GetByDistrict(district)).ReturnsAsync(new List<ZipCode>() { zipCodes[0], zipCodes[3] });
+            var controller = new ZipCodesController(unitOfWork.Object);
 
-            var actionResult = await zipCodeController.GetZipcodesByDistrict("Linz-Land");
+            var actionResult = await controller.GetZipCodesByDistrict(district);
 
             Assert.IsType<OkObjectResult>(actionResult.Result);
-            var result = actionResult.Result as OkObjectResult;
+            var result = actionResult.Result as ObjectResult;
 
             Assert.NotNull(result);
-            Assert.Equal(200, result!.StatusCode);
-            Assert.NotNull(result.Value);
-            Assert.Equal(2, ((List<ZipCode>)result.Value!).Count);
+            Assert.Equal(StatusCodes.Status200OK, result!.StatusCode);
+            Assert.Equal(2, (result.Value as IEnumerable<ZipCode>)!.Count());
 
-            zipCodeRepository.Verify(r => r.GetByDistrict(It.IsAny<string>()));
-            zipCodeRepository.VerifyNoOtherCalls();
+            unitOfWork.Verify(x => x.ZipCodes.GetByDistrict(It.IsAny<string>()));
+            unitOfWork.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async Task GetZipCodesByLocation()
         {
+            string location = "Linz";
             List<ZipCode> zipCodes = GetZipCodeTestData();
 
-            var zipCodeRepository = new Mock<IZipCodeRepository>();
-            zipCodeRepository.Setup(r => r.GetByLocation("Linz")).ReturnsAsync(new List<ZipCode>() { zipCodes[1], zipCodes[2] });
-            var zipCodeController = new ZipCodesController(zipCodeRepository.Object);
+            var unitOfWork = new Mock<IUnitOfWork>();
+            unitOfWork.Setup(x => x.ZipCodes.GetByLocation(location)).ReturnsAsync(new List<ZipCode>() { zipCodes[1], zipCodes[2] });
+            var controller = new ZipCodesController(unitOfWork.Object);
 
-            var actionResult = await zipCodeController.GetZipcodesByLocation("Linz");
-
-            Assert.IsType<OkObjectResult>(actionResult.Result);
-            var result = actionResult.Result as OkObjectResult;
+            var actionResult = await controller.GetZipCodesByLocation(location);
+            var result = actionResult.Result as ObjectResult;
 
             Assert.NotNull(result);
-            Assert.Equal(200, result!.StatusCode);
-            Assert.NotNull(result.Value);
-            Assert.Equal(2, ((List<ZipCode>)result.Value!).Count);
+            Assert.Equal(StatusCodes.Status200OK, result!.StatusCode);
+            Assert.Equal(2, (result.Value as IEnumerable<ZipCode>)!.Count());
 
-            zipCodeRepository.Verify(r => r.GetByLocation(It.IsAny<string>()));
-            zipCodeRepository.VerifyNoOtherCalls();
+            unitOfWork.Verify(x => x.ZipCodes.GetByLocation(It.IsAny<string>()));
+            unitOfWork.VerifyNoOtherCalls();
         }
 
         private static List<ZipCode> GetZipCodeTestData()
