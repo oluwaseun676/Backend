@@ -3,103 +3,156 @@ using Moq;
 using Tischreservierung.Controllers;
 using Core.Models;
 using Core.Contracts;
+using Microsoft.AspNetCore.Http;
+using System.Web.Http.Results;
+using WebApi.Controllers;
 
 namespace Tischreservierung.Tests.RestaurantTest.Controller
 {
     public class RestaurantCategoryControllerTest
     {
-        //[Fact]
-        //public async Task GetRestaurantCategories()
-        //{
-        //    var restaurantCategoryRepository = new Mock<IRestaurantCategoryRepository>();
-        //    restaurantCategoryRepository.Setup(r => r.GetRestaurantCategories()).ReturnsAsync(GetRestaurantCategoryTestData());
-        //    var restaurantCategoryController = new RestaurantCategoriesController(restaurantCategoryRepository.Object);
+        [Fact]
+        public async Task GetRestaurantCategories()
+        {
+            var uow = new Mock<IUnitOfWork>();
+            uow.Setup(x => x.RestaurantCategories.GetAll()).ReturnsAsync(GetRestaurantCategoryTestData());
+            var restaurantCategoryController = new RestaurantCategoriesController(uow.Object);
 
-        //    var actionResult = await restaurantCategoryController.GetRestaurantCategories();
-        //    var result = actionResult.Result as OkObjectResult;
+            var actionResult = await restaurantCategoryController.GetRestaurantCategories();
 
-        //    Assert.NotNull(result);
-        //    Assert.Equal(200, result!.StatusCode);
-        //    Assert.Equal(3, ((List<Category>)result.Value!).Count());
+            Assert.IsType<OkObjectResult>(actionResult.Result);
+            var result = actionResult.Result as OkObjectResult;
 
-        //    restaurantCategoryRepository.Verify(r => r.GetRestaurantCategories(), Times.Once);
-        //    restaurantCategoryRepository.VerifyNoOtherCalls();
-        //}
+            Assert.NotNull(result);
+            Assert.Equal(StatusCodes.Status200OK, result!.StatusCode);
+            Assert.Equal(3, ((List<Category>)result.Value!).Count());
 
-        //[Fact]
-        //public async Task GetRestaurantCategory()
-        //{
-        //    var repository = new Mock<IRestaurantCategoryRepository>();
-        //    repository.Setup(r => r.GetRestaurantCategory("Pizza")).ReturnsAsync(GetRestaurantCategoryTestData()[0]);
+            uow.Verify(x => x.RestaurantCategories.GetAll());
+            uow.VerifyNoOtherCalls();
+        }
 
-        //    var controller = new RestaurantCategoriesController(repository.Object);
+        [Fact]
+        public async Task GetRestaurantCategory()
+        {
+            int categoryId = 10;
+            Category category = new() { Id = categoryId, Name = "Pizza" };
 
-        //    var actionResult = await controller.GetRestaurantCategory("Pizza");
+            var uow = new Mock<IUnitOfWork>();
+            uow.Setup(x => x.RestaurantCategories.GetById(categoryId)).ReturnsAsync(category);
 
-        //    Assert.NotNull(actionResult);
-        //    Assert.Equal("Pizza", actionResult.Value!.Name);
+            var controller = new RestaurantCategoriesController(uow.Object);
 
-        //    repository.Verify(r => r.GetRestaurantCategory(It.IsAny<string>()));
-        //    repository.VerifyNoOtherCalls();
-        //}
+            var actionResult = await controller.GetRestaurantCategory(categoryId);
 
-        //[Fact]
-        //public async Task InsertRestaurantCategory()
-        //{
-        //    Category restaurantCategory = GetRestaurantCategoryTestData()[0];
+            Assert.IsType<OkObjectResult>(actionResult.Result);
+            var result = actionResult.Result as OkObjectResult;
 
-        //    var repository = new Mock<IRestaurantCategoryRepository>();
-        //    repository.Setup(r => r.InsertRestaurantCategory(It.IsAny<Category>()));
-        //    var controller = new RestaurantCategoriesController(repository.Object);
+            Assert.NotNull(actionResult);
+            Assert.Equal(StatusCodes.Status200OK, result!.StatusCode);
+            Assert.Equal(category, result.Value);
 
-        //    var actionResult = await controller.PostRestaurantCategory(restaurantCategory);
+            uow.Verify(x => x.RestaurantCategories.GetById(categoryId));
+            uow.VerifyNoOtherCalls();
+        }
 
-        //    Assert.IsType<CreatedAtActionResult>(actionResult.Result);
-        //    var result = actionResult.Result as CreatedAtActionResult;
+        [Fact]
+        public async void GetRestaurantCategory_ReturnsNotFound()
+        {
+            int categoryId = 10;
 
-        //    Assert.NotNull(result);
-        //    Assert.Equal(201, result!.StatusCode);
-        //    Assert.Equal(restaurantCategory, result.Value as Category);
+            var uow = new Mock<IUnitOfWork>();
+            uow.Setup(x => x.RestaurantCategories.GetById(categoryId)).ReturnsAsync((Category?)null);
+            var controller = new RestaurantCategoriesController(uow.Object);
 
-        //    repository.Verify(r => r.InsertRestaurantCategory(restaurantCategory));
-        //    repository.Verify(r => r.Save());
-        //    repository.VerifyNoOtherCalls();
+            var actionResult = await controller.GetRestaurantCategory(categoryId);
 
-        //}
+            Assert.IsType<Microsoft.AspNetCore.Mvc.NotFoundResult>(actionResult.Result);
+            var result = actionResult.Result as Microsoft.AspNetCore.Mvc.NotFoundResult;
 
-        //[Fact]
-        //public async Task DeleteRestauratCategory()
-        //{
-        //    var repository = new Mock<IRestaurantCategoryRepository>();
+            Assert.NotNull(result);
+            Assert.Equal(StatusCodes.Status404NotFound, result!.StatusCode);
 
-        //    repository.Setup(r => r.GetRestaurantCategory("Pizza")).ReturnsAsync(new Category());
-        //    repository.Setup(r => r.DeleteRestaurantCategory(It.IsAny<Category>()));
-        //    var controller = new RestaurantCategoriesController(repository.Object);
+            uow.Verify(x => x.RestaurantCategories.GetById(categoryId));
+            uow.VerifyNoOtherCalls();
+        }
 
-        //    var actionResult = await controller.DeleteRestaurantCategory("Pizza");
+        [Fact]
+        public async Task InsertRestaurantCategory()
+        {
+            Category restaurantCategory = GetRestaurantCategoryTestData()[0];
 
-        //    Assert.IsType<NoContentResult>(actionResult);
+            var uow = new Mock<IUnitOfWork>();
+            uow.Setup(x => x.RestaurantCategories.Insert(It.IsAny<Category>()));
+            var controller = new RestaurantCategoriesController(uow.Object);
 
-        //    repository.Verify(r => r.GetRestaurantCategory("Pizza"));
-        //    repository.Verify(r => r.DeleteRestaurantCategory(It.IsAny<Category>()));
-        //    repository.Verify(r => r.Save());
-        //    repository.VerifyNoOtherCalls();
-        //}
+            var actionResult = await controller.PostRestaurantCategory(restaurantCategory);
 
-        //private static List<Category> GetRestaurantCategoryTestData()
-        //{
-        //    List<Restaurant> restaurants = new List<Restaurant>();
-        //    restaurants.Add(new Restaurant() { Id = 1, Name = "R1" });
-        //    restaurants.Add(new Restaurant() { Id = 2, Name = "R2" });
-        //    restaurants.Add(new Restaurant() { Id = 3, Name = "R3" });
+            Assert.IsType<CreatedAtActionResult>(actionResult.Result);
+            var result = actionResult.Result as CreatedAtActionResult;
 
+            Assert.NotNull(result);
+            Assert.Equal(StatusCodes.Status201Created, result!.StatusCode);
+            Assert.Equal(restaurantCategory, result.Value as Category);
 
-        //    List<Category> restaurantCategories = new List<Category>();
-        //    restaurantCategories.Add(new Category() { Name = "Pizza", Restaurants = restaurants });
-        //    restaurantCategories.Add(new Category() { Name = "Pommes", Restaurants = restaurants });
-        //    restaurants.Add(new Restaurant() { Id = 4, Name = "R4" });
-        //    restaurantCategories.Add(new Category() { Name = "Ita", Restaurants = restaurants });
-        //    return restaurantCategories;
-        //}
+            uow.Verify(x => x.RestaurantCategories.Insert(restaurantCategory));
+            uow.Verify(x => x.SaveChangesAsync());
+            uow.VerifyNoOtherCalls();
+
+        }
+
+        [Fact]
+        public async Task DeleteRestauratCategory()
+        {
+            int categoryId = 10;
+
+            var uow = new Mock<IUnitOfWork>();
+            uow.Setup(x => x.RestaurantCategories.GetById(categoryId)).ReturnsAsync(new Category());
+            uow.Setup(x => x.RestaurantCategories.Delete(It.IsAny<Category>()));
+            var controller = new RestaurantCategoriesController(uow.Object);
+
+            var actionResult = await controller.DeleteRestaurantCategory(categoryId);
+
+            Assert.IsType<NoContentResult>(actionResult);
+            var result = actionResult as NoContentResult;
+
+            Assert.NotNull(result);
+            Assert.Equal(StatusCodes.Status204NoContent, result!.StatusCode);
+
+            uow.Verify(x => x.RestaurantCategories.GetById(categoryId));
+            uow.Verify(x => x.RestaurantCategories.Delete(It.IsAny<Category>()));
+            uow.Verify(x => x.SaveChangesAsync());
+            uow.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void DeleteRestaurantCategory_ReturnsNotFound()
+        {
+            int categoryId = 10;
+
+            var unitOfWork = new Mock<IUnitOfWork>();
+            unitOfWork.Setup(x => x.RestaurantCategories.GetById(categoryId)).ReturnsAsync((Category?)null);
+            var controller = new RestaurantCategoriesController(unitOfWork.Object);
+
+            var actionResult = await controller.DeleteRestaurantCategory(categoryId);
+
+            var result = actionResult as Microsoft.AspNetCore.Mvc.NotFoundResult;
+
+            Assert.NotNull(result);
+            Assert.Equal(StatusCodes.Status404NotFound, result!.StatusCode);
+
+            unitOfWork.Verify(x => x.RestaurantCategories.GetById(categoryId));
+            unitOfWork.VerifyNoOtherCalls();
+        }
+
+        private static List<Category> GetRestaurantCategoryTestData()
+        {
+            List<Category> restaurantCategories = new()
+            {
+                new Category() { Id = 1, Name = "Pizza" },
+                new Category() { Id = 2, Name = "Pommes" },
+                new Category() { Id = 3, Name = "Ita" }
+            };
+            return restaurantCategories;
+        }
     }
 }

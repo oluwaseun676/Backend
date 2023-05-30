@@ -15,20 +15,21 @@ namespace Tischreservierung.Tests.RestaurantTest.Controller
         [Fact]
         public async Task GetAllRestaurants()
         {
-            var unitOfWork = new Mock<IUnitOfWork>();
-            unitOfWork.Setup(x => x.Restaurants.GetAll()).ReturnsAsync(GetRestaurantTestData);
-            var controller = new RestaurantsController(unitOfWork.Object);
+            var uow = new Mock<IUnitOfWork>();
+            uow.Setup(x => x.Restaurants.GetAll()).ReturnsAsync(GetRestaurantTestData);
+            var controller = new RestaurantsController(uow.Object);
 
             var actionResult = await controller.GetRestaurants();
-            var result = actionResult.Result as ObjectResult;
-            
+
+            Assert.IsType<OkObjectResult>(actionResult.Result);
+            var result = actionResult.Result as OkObjectResult;
 
             Assert.NotNull(result);
             Assert.Equal(StatusCodes.Status200OK, result!.StatusCode);
             Assert.Equal(4, (result.Value as IEnumerable<Restaurant>)!.Count());
 
-            unitOfWork.Verify(x => x.Restaurants.GetAll());
-            unitOfWork.VerifyNoOtherCalls();
+            uow.Verify(x => x.Restaurants.GetAll());
+            uow.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -41,19 +42,21 @@ namespace Tischreservierung.Tests.RestaurantTest.Controller
                 Name = "R1"
             };
 
-            var unitOfWork = new Mock<IUnitOfWork>();
-            unitOfWork.Setup(x => x.Restaurants.GetById(restaurantId)).ReturnsAsync(restaurant);
-            var controller = new RestaurantsController(unitOfWork.Object);
+            var uow = new Mock<IUnitOfWork>();
+            uow.Setup(x => x.Restaurants.GetById(restaurantId)).ReturnsAsync(restaurant);
+            var controller = new RestaurantsController(uow.Object);
 
             var actionResult = await controller.GetRestaurant(restaurantId);
-            var result = actionResult.Result as ObjectResult;
+
+            Assert.IsType<OkObjectResult>(actionResult.Result);
+            var result = actionResult.Result as OkObjectResult;
 
             Assert.NotNull(result);
             Assert.Equal(StatusCodes.Status200OK, result!.StatusCode);
             Assert.Equal(restaurant, result.Value);
 
-            unitOfWork.Verify(x => x.Restaurants.GetById(restaurantId));
-            unitOfWork.VerifyNoOtherCalls();
+            uow.Verify(x => x.Restaurants.GetById(restaurantId));
+            uow.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -61,18 +64,20 @@ namespace Tischreservierung.Tests.RestaurantTest.Controller
         {
             int restaurant = 10;
 
-            var unitOfWork = new Mock<IUnitOfWork>();
-            unitOfWork.Setup(x => x.Restaurants.GetById(restaurant)).ReturnsAsync((Restaurant?)null);
-            var controller = new RestaurantsController(unitOfWork.Object);
+            var uow = new Mock<IUnitOfWork>();
+            uow.Setup(x => x.Restaurants.GetById(restaurant)).ReturnsAsync((Restaurant?)null);
+            var controller = new RestaurantsController(uow.Object);
 
             var actionResult = await controller.GetRestaurant(restaurant);
+
+            Assert.IsType<NotFoundResult>(actionResult.Result);
             var result = actionResult.Result as NotFoundResult;
 
             Assert.NotNull(result);
             Assert.Equal(StatusCodes.Status404NotFound, result!.StatusCode);
 
-            unitOfWork.Verify(x => x.Restaurants.GetById(restaurant));
-            unitOfWork.VerifyNoOtherCalls();
+            uow.Verify(x => x.Restaurants.GetById(restaurant));
+            uow.VerifyNoOtherCalls();
         }
 
 
@@ -86,21 +91,23 @@ namespace Tischreservierung.Tests.RestaurantTest.Controller
                 Name = "R1"
             };
 
-            var unitOfWork = new Mock<IUnitOfWork>();
-            unitOfWork.Setup(x => x.Restaurants.GetById(restaurantId)).ReturnsAsync(restaurant);
-            unitOfWork.Setup(x => x.Restaurants.Delete(It.IsAny<Restaurant>()));
-            var controller = new RestaurantsController(unitOfWork.Object);
+            var uow = new Mock<IUnitOfWork>();
+            uow.Setup(x => x.Restaurants.GetById(restaurantId)).ReturnsAsync(restaurant);
+            uow.Setup(x => x.Restaurants.Delete(It.IsAny<Restaurant>()));
+            var controller = new RestaurantsController(uow.Object);
 
             var actionResult = await controller.DeleteRestaurant(restaurantId);
+
+            Assert.IsType<NoContentResult>(actionResult);
             var result = actionResult as NoContentResult;
 
             Assert.NotNull(result);
             Assert.Equal(StatusCodes.Status204NoContent, result!.StatusCode);
 
-            unitOfWork.Verify(x => x.Restaurants.GetById(restaurantId));
-            unitOfWork.Verify(x => x.Restaurants.Delete(It.IsAny<Restaurant>()));
-            unitOfWork.Verify(x => x.SaveChangesAsync());
-            unitOfWork.VerifyNoOtherCalls();
+            uow.Verify(x => x.Restaurants.GetById(restaurantId));
+            uow.Verify(x => x.Restaurants.Delete(It.IsAny<Restaurant>()));
+            uow.Verify(x => x.SaveChangesAsync());
+            uow.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -108,18 +115,19 @@ namespace Tischreservierung.Tests.RestaurantTest.Controller
         {
             int restaurantId = 10;
 
-            var unitOfWork = new Mock<IUnitOfWork>();
-            unitOfWork.Setup(x => x.Restaurants.GetById(restaurantId)).ReturnsAsync((Restaurant?)null);
-            var controller = new RestaurantsController(unitOfWork.Object);
+            var ouw = new Mock<IUnitOfWork>();
+            ouw.Setup(x => x.Restaurants.GetById(restaurantId)).ReturnsAsync((Restaurant?)null);
+            var controller = new RestaurantsController(ouw.Object);
 
             var actionResult = await controller.DeleteRestaurant(restaurantId);
+
             var result = actionResult as NotFoundResult;
 
             Assert.NotNull(result);
             Assert.Equal(StatusCodes.Status404NotFound, result!.StatusCode);
 
-            unitOfWork.Verify(x => x.Restaurants.GetById(restaurantId));
-            unitOfWork.VerifyNoOtherCalls();
+            ouw.Verify(x => x.Restaurants.GetById(restaurantId));
+            ouw.VerifyNoOtherCalls();
         }
 
         private static List<Restaurant> GetRestaurantTestData()

@@ -34,11 +34,6 @@ namespace Tischreservierung.Controllers
         {
             var zipCode = await _unitOfWork.ZipCodes.GetByZipCode(zipcode);
 
-            if (zipCode == null)
-            {
-                return NotFound();
-            }
-
             return Ok(zipCode);
         }
 

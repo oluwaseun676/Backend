@@ -26,11 +26,6 @@ namespace Tischreservierung.Controllers
         {
             var restaurantOpeningTime = await _unitOfWork.OpeningTimes.GetByRestaurant(id);
 
-            if (restaurantOpeningTime == null)
-            {
-                return NotFound();
-            }
-
             return Ok(restaurantOpeningTime);
         }
 
@@ -39,11 +34,6 @@ namespace Tischreservierung.Controllers
         {
             var restaurantOpeningTime = await _unitOfWork.OpeningTimes.GetByDay(day);
 
-            if (restaurantOpeningTime == null)
-            {
-                return NotFound();
-            }
-
             return Ok(restaurantOpeningTime);
         }
 
@@ -51,11 +41,6 @@ namespace Tischreservierung.Controllers
         public async Task<ActionResult<IEnumerable<RestaurantOpeningTime>>> GetRestaurantOpeningTimeForRestaurantAndDay(int id,int day)
         {
             var restaurantOpeningTime = await _unitOfWork.OpeningTimes.GetByDayAndRestaurant(id, day);
-
-            if (restaurantOpeningTime == null)
-            {
-                return NotFound();
-            }
 
             return Ok(restaurantOpeningTime);
         }
