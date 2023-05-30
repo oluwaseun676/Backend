@@ -1,4 +1,5 @@
 ﻿using Core.Contracts;
+using Core.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace Persistence.Data
 {
-    public abstract class GenericRepository<T> : IGenericRepository<T> where T : class
+    public class GenericRepository<T> : IGenericRepository<T> where T : EntityObject
     {
         protected readonly OnlineReservationContext _dbContext;
         protected readonly DbSet<T> _dbSet;
 
-        protected GenericRepository(OnlineReservationContext context)
+        public GenericRepository(OnlineReservationContext context)
         {
             _dbContext = context;
             _dbSet = _dbContext.Set<T>();
