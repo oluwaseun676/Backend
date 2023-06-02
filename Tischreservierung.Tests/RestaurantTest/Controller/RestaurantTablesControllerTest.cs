@@ -9,121 +9,159 @@ using Tischreservierung.Controllers;
 using Persistence.Data.RestaurantRepo;
 using Core.Models;
 using Core.Contracts;
+using Microsoft.AspNetCore.Http;
+using Persistence.Data;
+using System.Web.Http.Results;
 
 namespace Tischreservierung.Tests.RestaurantTest.Controller
 {
     public class RestaurantTablesControllerTest
     {
-        //[Fact]
-        //public async Task GetAllRestaurants()
-        //{
-        //    var tableRepository = new Mock<IRestaurantTableRepository>();
-        //    tableRepository.Setup(r => r.GetRestaurantTables()).ReturnsAsync(GetRestaurantTableTestData);
-        //    var tableController = new RestaurantTablesController(tableRepository.Object);
+        [Fact]
+        public async Task GetAllRestaurantTables()
+        {
+            var uow = new Mock<IUnitOfWork>();
+            uow.Setup(x => x.RestaurantTables.GetAll()).ReturnsAsync(GetRestaurantTableTestData);
+            var controller = new RestaurantTablesController(uow.Object);
 
-        //    var actionResult = await tableController.GetRestaurantTables();
+            var actionResult = await controller.GetRestaurantTables();
 
-        //    Assert.IsType<OkObjectResult>(actionResult.Result);
-        //    var result = actionResult.Result as OkObjectResult;
+            Assert.IsType<OkObjectResult>(actionResult.Result);
+            var result = actionResult.Result as OkObjectResult;
 
-        //    Assert.NotNull(result);
-        //    Assert.Equal(200, result!.StatusCode);
-        //    Assert.Equal(6, ((List<RestaurantTable>)result.Value!).Count());
+            Assert.NotNull(result);
+            Assert.Equal(StatusCodes.Status200OK, result!.StatusCode);
+            Assert.Equal(6, ((List<RestaurantTable>)result.Value!).Count());
 
-        //    tableRepository.Verify(r => r.GetRestaurantTables());
-        //    tableRepository.VerifyNoOtherCalls();
-        //}
+            uow.Verify(x => x.RestaurantTables.GetAll());
+            uow.VerifyNoOtherCalls();
+        }
 
-        //[Fact]
-        //public async Task GetRestaurantReturnsNotFound()
-        //{
-        //    var tableRepository = new Mock<IRestaurantTableRepository>();
-        //    var tableController = new RestaurantTablesController(tableRepository.Object);
+        [Fact]
+        public async Task GetRestaurantTableReturnsNotFound()
+        {
+            int tableId = 10;
 
-        //    var actionResult = await tableController.GetRestaurantTable(10);
+            var uow = new Mock<IUnitOfWork>();
+            uow.Setup(x => x.RestaurantTables.GetById(tableId)).ReturnsAsync((RestaurantTable?)null);
+            var controller = new RestaurantTablesController(uow.Object);
 
-        //    Assert.IsType<NotFoundResult>(actionResult.Result);
+            var actionResult = await controller.GetRestaurantTable(10);
 
-        //    tableRepository.Verify(r => r.GetRestaurantTableById(10));
-        //    tableRepository.VerifyNoOtherCalls();
-        //}
+            Assert.IsType<Microsoft.AspNetCore.Mvc.NotFoundResult>(actionResult.Result);
+            var result = actionResult.Result as Microsoft.AspNetCore.Mvc.NotFoundResult;
 
-        //[Fact]
-        //public async Task GetRestauranById()
-        //{
-        //    int restaurantTableId = 10;
-        //    RestaurantTable table = new() { Id = restaurantTableId, SeatPlaces = 5, RestaurantId = 20 };
+            Assert.NotNull(result);
+            Assert.Equal(StatusCodes.Status404NotFound, result!.StatusCode);
 
-        //    var tableRepository = new Mock<IRestaurantTableRepository>();
-        //    tableRepository.Setup(r => r.GetRestaurantTableById(restaurantTableId)).ReturnsAsync(table);
-        //    var tableController = new RestaurantTablesController(tableRepository.Object);
+            uow.Verify(x => x.RestaurantTables.GetById(tableId));
+            uow.VerifyNoOtherCalls();
+        }
 
-        //    var actionResult = await tableController.GetRestaurantTable(restaurantTableId);
+        [Fact]
+        public async Task GetRestauranTableById()
+        {
+            int tableId = 10;
+            RestaurantTable table = new() { Id = tableId, SeatPlaces = 5, RestaurantId = 20 };
 
-        //    Assert.IsType<OkObjectResult>(actionResult.Result);
-        //    var result = actionResult.Result as OkObjectResult;
+            var uow = new Mock<IUnitOfWork>();
+            uow.Setup(x => x.RestaurantTables.GetById(tableId)).ReturnsAsync(table);
+            var controller = new RestaurantTablesController(uow.Object);
 
-        //    Assert.NotNull(result);
-        //    Assert.Equal(200, result!.StatusCode);
-        //    Assert.Equal(table, result.Value as RestaurantTable);
+            var actionResult = await controller.GetRestaurantTable(tableId);
 
-        //    tableRepository.Verify(r => r.GetRestaurantTableById(It.IsAny<int>()));
-        //    tableRepository.VerifyNoOtherCalls();
-        //}
+            Assert.IsType<OkObjectResult>(actionResult.Result);
+            var result = actionResult.Result as OkObjectResult;
 
-        //[Fact]
-        //public async Task PostRestaurant()
-        //{
-        //    int restaurantTableId = 10;
-        //    RestaurantTable table = new() { Id = restaurantTableId, SeatPlaces = 5, RestaurantId = 20 };
+            Assert.NotNull(result);
+            Assert.Equal(StatusCodes.Status200OK, result!.StatusCode);
+            Assert.Equal(table, result.Value);
 
-        //    var tableRepository = new Mock<IRestaurantTableRepository>();
-        //    tableRepository.Setup(r => r.InsertRestaurantTable(It.IsAny<RestaurantTable>()));
-        //    var tableController = new RestaurantTablesController(tableRepository.Object);
+            uow.Verify(x => x.RestaurantTables.GetById(tableId));
+            uow.VerifyNoOtherCalls();
+        }
 
-        //    var actionResult = await tableController.PostRestaurantTable(table);
+        [Fact]
+        public async Task PostRestaurantTable()
+        {
+            int tableId = 10;
+            RestaurantTable table = new() { Id = tableId, SeatPlaces = 5, RestaurantId = 20 };
 
-        //    Assert.IsType<CreatedAtActionResult>(actionResult.Result);
-        //    var result = actionResult.Result as CreatedAtActionResult;
+            var uow = new Mock<IUnitOfWork>();
+            uow.Setup(x => x.RestaurantTables.Insert(It.IsAny<RestaurantTable>()));
+            var controller = new RestaurantTablesController(uow.Object);
 
-        //    Assert.NotNull(result);
-        //    Assert.Equal(201, result!.StatusCode);
-        //    Assert.Equal(table, result.Value as RestaurantTable);
+            var actionResult = await controller.PostRestaurantTable(table);
 
-        //    tableRepository.Verify(r => r.InsertRestaurantTable(table));
-        //    tableRepository.Verify(r => r.Save());
-        //    tableRepository.VerifyNoOtherCalls();
-        //}
+            Assert.IsType<CreatedAtActionResult>(actionResult.Result);
+            var result = actionResult.Result as CreatedAtActionResult;
 
-        //[Fact]
-        //public async Task DeleteRestaurant()
-        //{
-        //    var tableRepository = new Mock<IRestaurantTableRepository>();
+            Assert.NotNull(result);
+            Assert.Equal(StatusCodes.Status201Created, result!.StatusCode);
+            Assert.Equal(table, result.Value as RestaurantTable);
 
-        //    tableRepository.Setup(r => r.GetRestaurantTableById(10)).ReturnsAsync(new RestaurantTable());
-        //    tableRepository.Setup(r => r.DeleteRestaurantTable(It.IsAny<RestaurantTable>()));
-        //    var tableController = new RestaurantTablesController(tableRepository.Object);
+            uow.Verify(x => x.RestaurantTables.Insert(table));
+            uow.Verify(x => x.SaveChangesAsync());
+            uow.VerifyNoOtherCalls();
+        }
 
-        //    var actionResult = await tableController.DeleteRestaurantTable(10);
+        [Fact]
+        public async Task DeleteRestaurantTable()
+        {
+            int tableId = 10;
 
-        //    Assert.IsType<NoContentResult>(actionResult);
+            var uow = new Mock<IUnitOfWork>();
+            uow.Setup(x => x.RestaurantTables.GetById(tableId)).ReturnsAsync(new RestaurantTable() { Id = tableId });
+            uow.Setup(x => x.RestaurantTables.Delete(It.IsAny<RestaurantTable>()));
+            var controller = new RestaurantTablesController(uow.Object);
 
-        //    tableRepository.Verify(r => r.GetRestaurantTableById(10));
-        //    tableRepository.Verify(r => r.DeleteRestaurantTable(It.IsAny<RestaurantTable>()));
-        //    tableRepository.Verify(r => r.Save());
-        //    tableRepository.VerifyNoOtherCalls();
-        //}
+            var actionResult = await controller.DeleteRestaurantTable(tableId);
 
-        //private static List<RestaurantTable> GetRestaurantTableTestData()
-        //{
-        //    List<RestaurantTable> restaurants = new();
-        //    restaurants.Add(new RestaurantTable() { Id = 1, SeatPlaces = 2, RestaurantId = 1 });
-        //    restaurants.Add(new RestaurantTable() { Id = 2, SeatPlaces = 4, RestaurantId = 1 });
-        //    restaurants.Add(new RestaurantTable() { Id = 3, SeatPlaces = 3, RestaurantId = 1 });
-        //    restaurants.Add(new RestaurantTable() { Id = 4, SeatPlaces = 4, RestaurantId = 2 });
-        //    restaurants.Add(new RestaurantTable() { Id = 5, SeatPlaces = 3, RestaurantId = 2 });
-        //    restaurants.Add(new RestaurantTable() { Id = 6, SeatPlaces = 3, RestaurantId = 3 });
-        //    return restaurants;
-        //}
+            Assert.IsType<NoContentResult>(actionResult);
+            var result = actionResult as NoContentResult;
+
+            Assert.NotNull(result);
+            Assert.Equal(StatusCodes.Status204NoContent, result!.StatusCode);
+
+            uow.Verify(x => x.RestaurantTables.GetById(tableId));
+            uow.Verify(x => x.RestaurantTables.Delete(It.IsAny<RestaurantTable>()));
+            uow.Verify(x => x.SaveChangesAsync());
+            uow.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void DeleteRestaurantTable_ReturnsNotFound()
+        {
+            int tableId = 10;
+
+            var uow = new Mock<IUnitOfWork>();
+            uow.Setup(x => x.RestaurantTables.GetById(tableId)).ReturnsAsync((RestaurantTable?)null);
+            var controller = new RestaurantTablesController(uow.Object);
+
+            var actionResult = await controller.DeleteRestaurantTable(tableId);
+
+            var result = actionResult as Microsoft.AspNetCore.Mvc.NotFoundResult;
+
+            Assert.NotNull(result);
+            Assert.Equal(StatusCodes.Status404NotFound, result!.StatusCode);
+
+            uow.Verify(x => x.RestaurantTables.GetById(tableId));
+            uow.VerifyNoOtherCalls();
+        }
+
+
+        private static List<RestaurantTable> GetRestaurantTableTestData()
+        {
+            List<RestaurantTable> tables = new()
+            {
+                new RestaurantTable() { Id = 1, SeatPlaces = 2, RestaurantId = 1 },
+                new RestaurantTable() { Id = 2, SeatPlaces = 4, RestaurantId = 1 },
+                new RestaurantTable() { Id = 3, SeatPlaces = 3, RestaurantId = 1 },
+                new RestaurantTable() { Id = 4, SeatPlaces = 4, RestaurantId = 2 },
+                new RestaurantTable() { Id = 5, SeatPlaces = 3, RestaurantId = 2 },
+                new RestaurantTable() { Id = 6, SeatPlaces = 3, RestaurantId = 3 }
+            };
+            return tables;
+        }
     }
 }

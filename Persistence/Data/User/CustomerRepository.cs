@@ -13,15 +13,5 @@ namespace Persistence.Data.User
         {
             return await _dbSet.FindAsync(mail);
         }
-
-        //public bool SetCustomer(Customer customer)
-        //{
-        //    if (_context.Customers.Any(c => c.EMail.ToLower() == customer.EMail.ToLower()))
-        //        return false;
-
-        //    _context.Customers.Add(customer);
-
-        //    return true;
-        //}
     }
 }

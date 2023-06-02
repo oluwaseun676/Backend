@@ -9,157 +9,161 @@ using Tischreservierung.Controllers.Person;
 using Core.Models;
 using Core.Contracts;
 using Core.Models.User;
+using Microsoft.AspNetCore.Http;
 
 namespace Tischreservierung.Tests.Person.Controller
 {
     public class EmployeeControllerTest
     {
-        //[Fact]
-        //public async Task GetAllEmployeeForRestaurant()
-        //{
-        //    int restaurantId = 1;
-        //    List<Employee> employees = TestData();
-        //    employees.RemoveAt(3);
+        [Fact]
+        public async Task GetAllEmployeeForRestaurant()
+        {
+            int restaurantId = 1;
+            List<Employee> employees = TestData();
+            employees.RemoveAt(3);
 
-        //    var employeeRepo = new Mock<IEmployeeRepository>();
-        //    employeeRepo.Setup(d => d.GetByRestaurantId(restaurantId))
-        //        .ReturnsAsync(employees);
-        //    var employeeCont = new EmployeeController(employeeRepo.Object);
+            var uow = new Mock<IUnitOfWork>();
+            uow.Setup(x => x.Employees.GetByRestaurant(restaurantId)).ReturnsAsync(employees);
+            var controller = new EmployeeController(uow.Object);
 
-        //    var actionResult = await employeeCont.GetEmployeeByRestaurantId(restaurantId);
+            var actionResult = await controller.GetEmployeeByRestaurantId(restaurantId);
 
-        //    Assert.IsType<OkObjectResult>(actionResult.Result);
-        //    var result = actionResult.Result as OkObjectResult;
+            Assert.IsType<OkObjectResult>(actionResult.Result);
+            var result = actionResult.Result as OkObjectResult;
 
-        //    Assert.NotNull(result);
-        //    Assert.Equal(200, result!.StatusCode);
-        //    Assert.Equal(3, ((List<Employee>)result.Value!).Count());
+            Assert.NotNull(result);
+            Assert.Equal(StatusCodes.Status200OK, result!.StatusCode);
+            Assert.Equal(3, ((List<Employee>)result.Value!).Count());
 
-        //    employeeRepo.Verify(c => c.GetByRestaurantId(restaurantId));
-        //    employeeRepo.VerifyNoOtherCalls();
-        //}
+            uow.Verify(x => x.Employees.GetByRestaurant(restaurantId));
+            uow.VerifyNoOtherCalls();
+        }
 
-        //[Fact]
-        //public async Task GetEmployeeByID()
-        //{
-        //    int id = 2;
+        [Fact]
+        public async Task GetEmployeeByID()
+        {
+            int id = 2;
 
-        //    var employeeRepo = new Mock<IEmployeeRepository>();
-        //    employeeRepo.Setup(d => d.GetEmployeeById(id)).ReturnsAsync(TestData()[1]);
-        //    var employeeCont = new EmployeeController(employeeRepo.Object);
+            var uow = new Mock<IUnitOfWork>();
+            uow.Setup(x => x.Employees.GetById(id)).ReturnsAsync(TestData()[1]);
+            var controller = new EmployeeController(uow.Object);
 
-        //    var actionResult = await employeeCont.GetEmployeeById(id);
+            var actionResult = await controller.GetEmployeeById(id);
 
-        //    Assert.IsType<OkObjectResult>(actionResult.Result);
-        //    var result = actionResult.Result as OkObjectResult;
+            Assert.IsType<OkObjectResult>(actionResult.Result);
+            var result = actionResult.Result as OkObjectResult;
 
 
-        //    Assert.NotNull(result);
-        //    Assert.Equal(200, result!.StatusCode);
-        //    Assert.Equal("Steini@gmail.com", ((Employee)result.Value!).EMail);
-        //}
+            Assert.NotNull(result);
+            Assert.Equal(StatusCodes.Status200OK, result!.StatusCode);
+            Assert.Equal("Steini@gmail.com", ((Employee)result.Value!).EMail);
 
-        //[Fact]
-        //public async Task DeleteEmployee()
-        //{
-        //    int id = 2;
+            uow.Verify(x => x.Employees.GetById(id));
+            uow.VerifyNoOtherCalls();
+        }
 
-        //    var employeeRepo = new Mock<IEmployeeRepository>();
+        [Fact]
+        public async Task DeleteEmployee()
+        {
+            int id = 2;
 
-        //    employeeRepo.Setup(e => e.GetEmployeeById(id)).ReturnsAsync(new Employee());
-        //    employeeRepo.Setup(e => e.DeleteEmployee(It.IsAny<Employee>()));
-        //    var employeeCont = new EmployeeController(employeeRepo.Object);
+            var uow = new Mock<IUnitOfWork>();
 
-        //    var actionResult = await employeeCont.DeleteCustomer(id);
+            uow.Setup(x => x.Employees.GetById(id)).ReturnsAsync(new Employee());
+            uow.Setup(x => x.Employees.Delete(It.IsAny<Employee>()));
+            var controller = new EmployeeController(uow.Object);
 
-        //    Assert.IsType<NoContentResult>(actionResult);
+            var actionResult = await controller.DeleteCustomer(id);
 
-        //    employeeRepo.Verify(r => r.GetEmployeeById(id));
-        //    employeeRepo.Verify(r => r.DeleteEmployee(It.IsAny<Employee>()));
-        //    employeeRepo.Verify(r => r.Save());
-        //    employeeRepo.VerifyNoOtherCalls();
-        //}
+            Assert.IsType<NoContentResult>(actionResult);
 
-        //[Fact]
-        //public void PostEmployee()
-        //{
-        //    Employee emp = new Employee()
-        //    {
-        //        Id = 10,
-        //        Name = "Sepp",
-        //        FamilyName = "Apfel",
-        //        EMail = "birnenseppl@gmail.com",
-        //        Password = "testF",
-        //        IsAdmin = true,
-        //        Restaurant = TestData()[3].Restaurant
-        //    };
+            uow.Verify(x => x.Employees.GetById(id));
+            uow.Verify(x => x.Employees.Delete(It.IsAny<Employee>()));
+            uow.Verify(x => x.SaveChangesAsync());
+            uow.VerifyNoOtherCalls();
+        }
 
-        //    var employeeRepo = new Mock<IEmployeeRepository>();
-        //    employeeRepo.Setup(d => d.SetEmployee(emp));
-        //    var employeeCont = new EmployeeController(employeeRepo.Object);
+        [Fact]
+        public void PostEmployee()
+        {
+            Employee employee = new()
+            {
+                Id = 10,
+                Name = "Sepp",
+                FamilyName = "Apfel",
+                EMail = "birnenseppl@gmail.com",
+                Password = "testF",
+                IsAdmin = true,
+                Restaurant = TestData()[3].Restaurant
+            };
 
-        //    var actionResult = employeeCont.PostEmployee(emp);
+            var uow = new Mock<IUnitOfWork>();
+            uow.Setup(x => x.Employees.Insert(employee));
+            var controller = new EmployeeController(uow.Object);
 
-        //    Assert.IsType<CreatedAtActionResult>(actionResult.Result);
-        //    var result = actionResult.Result as CreatedAtActionResult;
+            var actionResult = controller.PostEmployee(employee);
 
-        //    Assert.NotNull(result);
-        //    Assert.Equal(201, result!.StatusCode);
-        //    Assert.Equal(emp, result.Value as Employee);
+            Assert.IsType<CreatedAtActionResult>(actionResult.Result);
+            var result = actionResult.Result as CreatedAtActionResult;
 
-        //    employeeRepo.Verify(c => c.SetEmployee(emp));
-        //    employeeRepo.Verify(c => c.Save());
-        //    employeeRepo.VerifyNoOtherCalls();
-        //}
+            Assert.NotNull(result);
+            Assert.Equal(StatusCodes.Status201Created, result!.StatusCode);
+            Assert.Equal(employee, result.Value as Employee);
 
-        //private static List<Employee> TestData()
-        //{
-        //    Restaurant restaurant = new Restaurant() { Id = 1, Name = "Test Restaurant" };
-        //    Restaurant restaurant2 = new Restaurant() { Id = 2, Name = "Test Bar" };
-        //    List<Employee> data = new List<Employee>();
+            uow.Verify(x => x.Employees.Insert(employee));
+            uow.Verify(x => x.SaveChangesAsync());
+            uow.VerifyNoOtherCalls();
+        }
 
-        //    data.Add(new Employee()
-        //    {
-        //        Id = 1,
-        //        Name = "Elias",
-        //        FamilyName = "Bauer",
-        //        EMail = "belias@gmail.com",
-        //        Password = "testG",
-        //        IsAdmin = true,
-        //        Restaurant = restaurant
-        //    });
-        //    data.Add(new Employee()
-        //    {
-        //        Id = 2,
-        //        Name = "Felix",
-        //        FamilyName = "Stein",
-        //        EMail = "Steini@gmail.com",
-        //        Password = "testH",
-        //        IsAdmin = false,
-        //        Restaurant = restaurant
-        //    });
-        //    data.Add(new Employee()
-        //    {
-        //        Id = 3,
-        //        Name = "Sarah",
-        //        FamilyName = "Müller",
-        //        EMail = "Sarah-Müller@gmail.com",
-        //        Password = "testI",
-        //        IsAdmin = false,
-        //        Restaurant = restaurant
-        //    });
-        //    data.Add(new Employee()
-        //    {
-        //        Id = 4,
-        //        Name = "Lena",
-        //        FamilyName = "Baumann",
-        //        EMail = "l.bau-testBar@gmail.com",
-        //        Password = "testJ",
-        //        IsAdmin = false,
-        //        Restaurant = restaurant2
-        //    });
+        private static List<Employee> TestData()
+        {
+            Restaurant restaurant = new Restaurant() { Id = 1, Name = "Test Restaurant" };
+            Restaurant restaurant2 = new Restaurant() { Id = 2, Name = "Test Bar" };
+            List<Employee> data = new()
+            {
+                new Employee()
+                {
+                    Id = 1,
+                    Name = "Elias",
+                    FamilyName = "Bauer",
+                    EMail = "belias@gmail.com",
+                    Password = "testG",
+                    IsAdmin = true,
+                    Restaurant = restaurant
+                },
+                new Employee()
+                {
+                    Id = 2,
+                    Name = "Felix",
+                    FamilyName = "Stein",
+                    EMail = "Steini@gmail.com",
+                    Password = "testH",
+                    IsAdmin = false,
+                    Restaurant = restaurant
+                },
+                new Employee()
+                {
+                    Id = 3,
+                    Name = "Sarah",
+                    FamilyName = "Müller",
+                    EMail = "Sarah-Müller@gmail.com",
+                    Password = "testI",
+                    IsAdmin = false,
+                    Restaurant = restaurant
+                },
+                new Employee()
+                {
+                    Id = 4,
+                    Name = "Lena",
+                    FamilyName = "Baumann",
+                    EMail = "l.bau-testBar@gmail.com",
+                    Password = "testJ",
+                    IsAdmin = false,
+                    Restaurant = restaurant2
+                }
+            };
 
-        //    return data;
-        //}
+            return data;
+        }
     }
 }

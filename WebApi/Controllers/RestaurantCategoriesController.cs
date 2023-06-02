@@ -39,7 +39,7 @@ namespace Tischreservierung.Controllers
                 return NotFound();
             }
 
-            return restaurantCategory;
+            return Ok(restaurantCategory);
         }
 
         [HttpPost]

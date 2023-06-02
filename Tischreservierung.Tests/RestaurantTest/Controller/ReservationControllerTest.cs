@@ -19,7 +19,7 @@ namespace Tischreservierung.Tests.RestaurantTest.Controller
         public async void GetReservation()
         {
             int reservationId = 10;
-            Reservation reservation = new Reservation()
+            Reservation reservation = new()
             {
                 Id = reservationId,
                 CustomerId = 1,
@@ -35,6 +35,8 @@ namespace Tischreservierung.Tests.RestaurantTest.Controller
             var controller = new ReservationsController(unitOfWork.Object);
 
             var actionResult = await controller.GetReservation(reservationId);
+
+            Assert.IsType<OkObjectResult>(actionResult.Result);
             var result = actionResult.Result as ObjectResult;
 
             Assert.NotNull(result);
@@ -55,6 +57,8 @@ namespace Tischreservierung.Tests.RestaurantTest.Controller
             var controller = new ReservationsController(unitOfWork.Object);
 
             var actionResult = await controller.GetReservation(reservationId);
+
+            Assert.IsType<NotFoundResult>(actionResult.Result);
             var result = actionResult.Result as NotFoundResult;
 
             Assert.NotNull(result);
@@ -67,7 +71,7 @@ namespace Tischreservierung.Tests.RestaurantTest.Controller
         [Fact]
         public async void PostReservation()
         {
-            ReservationPostDto reservation = new ReservationPostDto()
+            ReservationPostDto reservation = new()
             {
                 CustomerId = 1,
                 RestaurantTableId = 101,
@@ -82,7 +86,9 @@ namespace Tischreservierung.Tests.RestaurantTest.Controller
             var controller = new ReservationsController(unitOfWork.Object);
 
             var actionResult = await controller.PostReservation(reservation);
-            var result = actionResult.Result as ObjectResult;
+
+            Assert.IsType<CreatedAtActionResult>(actionResult.Result);
+            var result = actionResult.Result as CreatedAtActionResult;
 
             Assert.NotNull(result);
             Assert.Equal(StatusCodes.Status201Created, result!.StatusCode);
@@ -113,6 +119,8 @@ namespace Tischreservierung.Tests.RestaurantTest.Controller
             var controller = new ReservationsController(unitOfWork.Object);
 
             var actionResult = await controller.DeleteReservation(reservationId);
+
+            Assert.IsType<NoContentResult>(actionResult);
             var result = actionResult as NoContentResult;
 
             Assert.NotNull(result);
@@ -134,6 +142,7 @@ namespace Tischreservierung.Tests.RestaurantTest.Controller
             var controller = new ReservationsController(unitOfWork.Object);
 
             var actionResult = await controller.DeleteReservation(reservationId);
+
             var result = actionResult as NotFoundResult;
 
             Assert.NotNull(result);
@@ -145,13 +154,15 @@ namespace Tischreservierung.Tests.RestaurantTest.Controller
 
         private static List<Reservation> GetReservationTestData()
         {
-            List<Reservation> reservations = new();
-            reservations.Add(new Reservation() { CustomerId = 1, RestaurantTableId = 101, RestaurantId = 1, ReservationDay = DateTime.Now, StartTime = DateTime.Now, EndTime = DateTime.Now });
-            reservations.Add(new Reservation() { CustomerId = 1, RestaurantTableId = 102, RestaurantId = 1, ReservationDay = DateTime.Now, StartTime = DateTime.Now, EndTime = DateTime.Now });
-            reservations.Add(new Reservation() { CustomerId = 1, RestaurantTableId = 102, RestaurantId = 1, ReservationDay = DateTime.Now, StartTime = DateTime.Now, EndTime = DateTime.Now });
-            reservations.Add(new Reservation() { CustomerId = 2, RestaurantTableId = 105, RestaurantId = 2, ReservationDay = DateTime.Now, StartTime = DateTime.Now, EndTime = DateTime.Now });
-            reservations.Add(new Reservation() { CustomerId = 2, RestaurantTableId = 105, RestaurantId = 2, ReservationDay = DateTime.Now, StartTime = DateTime.Now, EndTime = DateTime.Now });
-            reservations.Add(new Reservation() { CustomerId = 3, RestaurantTableId = 106, RestaurantId = 2, ReservationDay = DateTime.Now, StartTime = DateTime.Now, EndTime = DateTime.Now });
+            List<Reservation> reservations = new()
+            {
+                new Reservation() { CustomerId = 1, RestaurantTableId = 101, RestaurantId = 1, ReservationDay = DateTime.Now, StartTime = DateTime.Now, EndTime = DateTime.Now },
+                new Reservation() { CustomerId = 1, RestaurantTableId = 102, RestaurantId = 1, ReservationDay = DateTime.Now, StartTime = DateTime.Now, EndTime = DateTime.Now },
+                new Reservation() { CustomerId = 1, RestaurantTableId = 102, RestaurantId = 1, ReservationDay = DateTime.Now, StartTime = DateTime.Now, EndTime = DateTime.Now },
+                new Reservation() { CustomerId = 2, RestaurantTableId = 105, RestaurantId = 2, ReservationDay = DateTime.Now, StartTime = DateTime.Now, EndTime = DateTime.Now },
+                new Reservation() { CustomerId = 2, RestaurantTableId = 105, RestaurantId = 2, ReservationDay = DateTime.Now, StartTime = DateTime.Now, EndTime = DateTime.Now },
+                new Reservation() { CustomerId = 3, RestaurantTableId = 106, RestaurantId = 2, ReservationDay = DateTime.Now, StartTime = DateTime.Now, EndTime = DateTime.Now }
+            };
 
             return reservations;
         }
