@@ -43,19 +43,6 @@ namespace Tischreservierung.Controllers.Person
             return NoContent();
         }
 
-        //[HttpPost()]
-        //public async Task<ActionResult> PostCustomer(Customer data)
-        //{
-        //    bool check = _unitOfWork.Customers.SetCustomer(data);
-
-        //    if (!check)
-        //        return UnprocessableEntity("GetCustomerByMail");
-
-        //    await _unitOfWork.SaveChangesAsync();
-
-        //    return CreatedAtAction("GetCustomerByMail", new { mail = data.EMail }, data);
-        //}
-
         [HttpPost()]
         public async Task<ActionResult> PostCustomer(Customer data)
         {
