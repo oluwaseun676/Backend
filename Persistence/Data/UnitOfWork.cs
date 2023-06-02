@@ -41,6 +41,16 @@ namespace Persistence.Data
         public void Dispose()
         {
             _dbContext.Dispose();
+
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _dbContext.Dispose();
+            }
         }
 
         public async ValueTask DisposeAsync()
