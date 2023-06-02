@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Core.Models
 {
-    public class RestaurantCategory
+    public class RestaurantCategory : EntityObject
     {
         [ForeignKey(nameof(Restaurant))]
         public int RestaurantId { get; set; }
